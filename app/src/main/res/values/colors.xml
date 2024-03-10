@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="pet">#ff4048fd</color>
+    <color name="grey">#ffe5e4e3</color>
+    <color name="dark_grey">#ff898989</color>
+    <color name="hint">#ffb3b1b0</color>
+    <color name="google">#ff337efe</color>#ff4048fd
+    <color name="create_account">#ff4048fd</color>
+
+
+
+
+</resources>

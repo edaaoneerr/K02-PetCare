@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/getStartedFragment">
+
+    <fragment
+        android:id="@+id/getStartedFragment2"
+        android:name="com.example.petcareproject.view.GetStartedFragment2"
+        android:label="fragment_get_started2"
+        tools:layout="@layout/fragment_get_started2" >
+        <action
+            android:id="@+id/action_getStartedFragment2_to_getStartedFragment3"
+            app:destination="@id/getStartedFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/getStartedFragment3"
+        android:name="com.example.petcareproject.view.GetStartedFragment3"
+        android:label="fragment_get_started3"
+        tools:layout="@layout/fragment_get_started3" >
+        <action
+            android:id="@+id/action_getStartedFragment3_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/getStartedFragment"
+        android:name="com.example.petcareproject.view.GetStartedFragment"
+        android:label="GetStartedFragment">
+        <action
+            android:id="@+id/action_getStartedFragment_to_getStartedFragment2"
+            app:destination="@id/getStartedFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.petcareproject.view.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+</navigation>
