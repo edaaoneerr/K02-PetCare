@@ -42,7 +42,7 @@ android {
 
 dependencies {
     val nav_version = "2.7.7"
-
+    implementation("com.tbuonomo:dotsindicator:5.0")
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
 
     // Kotlin

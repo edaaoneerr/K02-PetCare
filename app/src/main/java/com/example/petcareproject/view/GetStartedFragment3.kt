@@ -29,12 +29,10 @@ class GetStartedFragment3 : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*view.findViewById<Button>(R.id.getStartedButton).setOnClickListener {
-             val action = GetStartedFragment3Directions.actionGetStartedFragment3ToLoginFragment()
-            findNavController().navigate(action)
-        }*/
-
+        view.findViewById<Button>(R.id.getStartedButton).setOnClickListener {
+            findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
 
     }
 
+}
 }
