@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "954419791903",
+    "project_id": "pethealer-e19c5",
+    "storage_bucket": "pethealer-e19c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:954419791903:android:76d09a027cbcfdae592d2a",
+        "android_client_info": {
+          "package_name": "com.example.petcareproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "954419791903-jdqr3nvr34v7ndj2gqij29q2mokm4b0e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petcareproject",
+            "certificate_hash": "1c84122aaf9e5ae30c0b920ea4ffcea60eb77e79"
+          }
+        },
+        {
+          "client_id": "954419791903-smqmifn3ia603o3fe3alcua6qadbppd1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwpRFBOHc_Tta8S0Bz_-ZOYtsOJ_HULvg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "954419791903-smqmifn3ia603o3fe3alcua6qadbppd1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,21 @@
+
+~
+Napp/src/main/java/com/example/petcareproject/view/authview/RegisterFragment.kt,3\8\383ef0b235f46d3946b02465e900091722da6f02
+{
+Kapp/src/main/java/com/example/petcareproject/view/authview/LoginFragment.kt,6\e\6e95980036541793e000c7f923391bf17af11bca
+D
+app/build.gradle.kts,d\2\d2a4383452aad84a18429a5844d31330a012a9e6
+H
+app/google-services.json,f\d\fd8d34b142d02ec743a8efefefd2c097961666e9
+x
+Happ/src/main/java/com/example/petcareproject/viewmodel/LoginViewModel.kt,d\0\d0d03789a1b86bbb760d422613499208a2716118
+y
+Iapp/src/main/java/com/example/petcareproject/repository/AuthRepository.kt,4\3\4349dfd65a148b5c7975fd07761d8a6023e39996
+w
+Gapp/src/main/java/com/example/petcareproject/viewmodel/AuthViewModel.kt,e\a\ea0821774c6ab4a9d8684e246c2bd6bee08472a3
+@
+build.gradle.kts,d\b\dbcff70658daf80b53ce624f6adcaa529df5ed8d
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+Z
+*app/src/main/res/layout/fragment_login.xml,f\d\fdd3cd19e967c0f22eaa0b7f68fbd15e1a914b42

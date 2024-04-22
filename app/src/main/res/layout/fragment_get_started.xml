@@ -7,11 +7,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".view.GetStartedFragment">
+        tools:context=".view.greetingview.GetStartedFragment">
 
 
         <Button
-            android:id="@+id/getStartedButton"
+            android:id="@+id/registerButton"
             android:layout_width="0dp"
             android:layout_height="59dp"
             android:layout_marginStart="24dp"

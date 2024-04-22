@@ -1,4 +1,4 @@
-package com.example.petcareproject.view
+package com.example.petcareproject.view.greetingview
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,13 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.navigation.fragment.findNavController
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.petcareproject.R
-import com.example.petcareproject.adapter.ViewPagerAdapter
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 
 class GetStartedFragment : Fragment() {
 
@@ -34,12 +29,12 @@ class GetStartedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        /* view.findViewById<Button>(R.id.getStartedButton).setOnClickListener {
+        /* view.findViewById<Button>(R.id.registerButton).setOnClickListener {
             val action = GetStartedFragmentDirections.actionGetStartedFragmentToGetStartedFragment2()
             findNavController().navigate(action)
         }*/
 
-        view.findViewById<Button>(R.id.getStartedButton).setOnClickListener {
+        view.findViewById<Button>(R.id.registerButton).setOnClickListener {
             // Assuming you have a ViewPager2 named viewPager in your MainActivity
             val viewPager: ViewPager2? = activity?.findViewById(R.id.view_pager)
             viewPager?.let {

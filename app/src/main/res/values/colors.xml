@@ -8,8 +8,7 @@
     <color name="hint">#ffb3b1b0</color>
     <color name="google">#ff337efe</color>#ff4048fd
     <color name="create_account">#ff4048fd</color>
-
-
+    <color name="alert">#ffff4d4f</color>
 
 
 </resources>

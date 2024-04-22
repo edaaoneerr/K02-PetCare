@@ -1,4 +1,4 @@
-package com.example.petcareproject.view
+package com.example.petcareproject.view.greetingview
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,10 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.widget.ViewPager2
 import com.example.petcareproject.R
-import com.google.android.material.tabs.TabLayout
 
 class GetStartedFragment3 : Fragment() {
 
@@ -29,7 +26,7 @@ class GetStartedFragment3 : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<Button>(R.id.getStartedButton).setOnClickListener {
+        view.findViewById<Button>(R.id.registerButton).setOnClickListener {
             findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
 
     }

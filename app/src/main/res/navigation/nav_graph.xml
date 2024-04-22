@@ -6,7 +6,7 @@
     app:startDestination="@id/onboardingFragment">
     <fragment
         android:id="@+id/getStartedFragment"
-        android:name="com.example.petcareproject.view.GetStartedFragment"
+        android:name="com.example.petcareproject.view.greetingview.GetStartedFragment"
         android:label="GetStartedFragment">
         <action
             android:id="@+id/action_getStartedFragment_to_getStartedFragment2"
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/getStartedFragment2"
-        android:name="com.example.petcareproject.view.GetStartedFragment2"
+        android:name="com.example.petcareproject.view.greetingview.GetStartedFragment2"
         android:label="fragment_get_started2"
         tools:layout="@layout/fragment_get_started2" >
         <action
@@ -23,19 +23,26 @@
     </fragment>
     <fragment
         android:id="@+id/getStartedFragment3"
-        android:name="com.example.petcareproject.view.GetStartedFragment3"
+        android:name="com.example.petcareproject.view.greetingview.GetStartedFragment3"
         android:label="fragment_get_started3"
         tools:layout="@layout/fragment_get_started3" >
     </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.petcareproject.view.LoginFragment"
+        android:name="com.example.petcareproject.view.authview.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="com.example.petcareproject.view.OnboardingFragment"
+        android:name="com.example.petcareproject.view.greetingview.OnboardingFragment"
         android:label="fragment_onboarding"
         tools:layout="@layout/fragment_onboarding" >
         <action
@@ -45,5 +52,18 @@
             android:id="@+id/action_onboardingFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.petcareproject.view.authview.RegisterFragment"
+        android:label="RegisterFragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.petcareproject.view.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
 
 </navigation>

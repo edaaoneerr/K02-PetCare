@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-kapt")
+    id("com.google.gms.google-services")
 
 }
 
@@ -11,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.petcareproject"
-        minSdk = 27
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -41,6 +43,17 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.1.0")
+    //Facebook
+    implementation ("com.facebook.android:facebook-login:latest.release")
+
+
+
     val nav_version = "2.7.7"
     implementation("com.tbuonomo:dotsindicator:5.0")
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
