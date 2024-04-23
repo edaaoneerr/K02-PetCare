@@ -51,7 +51,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.1.0")
     //Facebook
     implementation ("com.facebook.android:facebook-login:latest.release")
-
+    implementation("com.google.firebase:firebase-database-ktx:20.3.1")
 
 
     val nav_version = "2.7.7"

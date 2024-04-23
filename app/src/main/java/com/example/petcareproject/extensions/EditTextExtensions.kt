@@ -40,7 +40,5 @@ fun Array<EditText>.strokeField(context: Context, backgroundColor: Int, strokeCo
         editText.background = background
         editText.setTextColor(ContextCompat.getColorStateList(context, R.color.pet)) // This needs a valid color resource
 
-        val cDrawable = ContextCompat.getDrawable(context, R.drawable.red_cursor) as GradientDrawable
-        editText.textCursorDrawable = cDrawable
     }
 }
