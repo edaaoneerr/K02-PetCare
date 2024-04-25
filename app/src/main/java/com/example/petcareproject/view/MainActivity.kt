@@ -1,20 +1,15 @@
 package com.example.petcareproject.view
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.petcareproject.R
 import com.example.petcareproject.util.PreferenceHelper
-import com.example.petcareproject.view.authview.LoginFragment
-import com.example.petcareproject.view.greetingview.OnboardingFragment
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import kotlin.math.log
 
 
 class MainActivity : AppCompatActivity() {

@@ -15,7 +15,7 @@
         tools:context=".view.authview.RegisterFragment">
 
         <TextView
-            android:id="@+id/welcomingMessage"
+            android:id="@+id/regWelcomingMessage"
             android:layout_width="366dp"
             android:layout_height="122dp"
             android:layout_marginStart="24dp"
@@ -25,13 +25,13 @@
             android:text="Create New\nAccount"
             android:textColor="@color/black"
             android:textSize="40sp"
-            app:layout_constraintBottom_toTopOf="@+id/welcomingCareMessage"
+            app:layout_constraintBottom_toTopOf="@+id/regWelcomingCareMessage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/welcomingCareMessage"
+            android:id="@+id/regWelcomingCareMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -44,7 +44,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcomingMessage" />
+            app:layout_constraintTop_toBottomOf="@+id/regWelcomingMessage" />
 
         <EditText
             android:id="@+id/fullNameText"
@@ -58,19 +58,19 @@
             android:ems="10"
             android:fontFamily="@font/poppins_medium"
             android:hint="Full Name"
-            android:textCursorDrawable="@drawable/purple_cursor"
+            android:textCursorDrawable="@{viewModel.cursorDrawable}"
             android:inputType="textPersonName"
             android:paddingStart="24dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:textColorHint="@color/hint"
-            app:layout_constraintBottom_toTopOf="@+id/emailText"
+            app:layout_constraintBottom_toTopOf="@+id/emailRegText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcomingCareMessage" />
+            app:layout_constraintTop_toBottomOf="@+id/regWelcomingCareMessage" />
 
         <EditText
-            android:id="@+id/emailText"
+            android:id="@+id/emailRegText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -109,11 +109,11 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:textColorHint="@color/hint"
-            android:textCursorDrawable="@drawable/purple_cursor"
+            android:textCursorDrawable="@{viewModel.cursorDrawable}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailText" />
+            app:layout_constraintTop_toBottomOf="@+id/emailRegText" />
 
         <CheckBox
             android:id="@+id/vetCheckbox"

@@ -23,9 +23,9 @@ class AuthRepository {
     }
 
     fun signOut() {
-
         firebaseAuth.signOut() // For Firebase Auth
-        println("USER" + firebaseAuth.currentUser);
         loginManager.logOut() // For Facebook Auth
+
     }
+
 }

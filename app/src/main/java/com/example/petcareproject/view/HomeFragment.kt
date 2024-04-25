@@ -40,7 +40,8 @@ class HomeFragment : Fragment() {
 
             try {
                 val user = FirebaseAuth.getInstance().currentUser;
-                viewModel.logout()
+                val googleSignInClient = viewModel.setupGoogleSignIn(requireActivity())
+                viewModel.logout(googleSignInClient)
                 // Optionally, add any other actions you'd like to perform after logging out
                 Toast.makeText(context, "Logged out", Toast.LENGTH_SHORT).show()
                 System.exit(0);

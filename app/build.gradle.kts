@@ -47,6 +47,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+    implementation ("com.google.firebase:firebase-functions-ktx")
+
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.1.0")
     //Facebook
@@ -61,6 +63,8 @@ dependencies {
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

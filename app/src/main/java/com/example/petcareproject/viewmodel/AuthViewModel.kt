@@ -2,12 +2,12 @@ package com.example.petcareproject.viewmodel
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.animation.AnimationUtils
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -25,10 +25,8 @@ import com.facebook.GraphRequest
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
@@ -37,7 +35,10 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import org.json.JSONException
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
@@ -72,13 +73,18 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     private val _passwordShouldShake = MutableLiveData<Boolean>()
     val passwordShouldShake: LiveData<Boolean> = _passwordShouldShake
 
+    val showResetPasswordDialog = MutableLiveData<Boolean>()
+
     private val firebaseAuth = FirebaseAuth.getInstance()
+/*
     private lateinit var googleSignInClient: GoogleSignInClient
+*/
 
     val userLiveData = MutableLiveData<FirebaseUser?>()
     val errorLiveData = MutableLiveData<String>()
 
     private var isNewUser: Boolean? = false
+    var authErrorCounter = 0
 
 
 
@@ -120,33 +126,58 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     }
 
     fun login(email: String, password: String) {
-         repository.loginUser(email, password).addOnCompleteListener { authResultTask ->
-            if (authResultTask.isSuccessful) {
-                errorLiveData.postValue("Sign in successful.")
-                userLiveData.postValue(firebaseAuth.currentUser)
-                _loginStatus.postValue(authResultTask)
+        checkUserExists(email) { exists ->
+            println("'${email}':  ${exists}")
+            if (exists) {
+                repository.loginUser(email, password)
+                    .addOnCompleteListener { authResultTask ->
+                        if (authResultTask.isSuccessful) {
+                            errorLiveData.postValue("Sign in successful.")
+                            userLiveData.postValue(firebaseAuth.currentUser)
+                            _loginStatus.postValue(authResultTask)
+                        } else {
+                            _loginStatus.postValue(authResultTask)
+                                authErrorCounter++
+                                if (authErrorCounter >= 2) {
+                                    showResetPasswordDialog.postValue(true)
+                                } else {
+                                    errorLiveData.postValue("Wrong password. Please try again.")
+                                }
+                            }
+                    }
             } else {
-                errorLiveData.postValue("${authResultTask.exception?.message}")
+                errorLiveData.postValue("No user found associated to this account.")
             }
+
         }
     }
 
-
-    fun register(email: String, password: String) {
-        repository.registerUser(email, password).addOnCompleteListener { authResultTask ->
-            if (authResultTask.isSuccessful) {
-                        errorLiveData.postValue("Sign up successful.")
-                        userLiveData.postValue(firebaseAuth.currentUser)
-                        _registrationStatus.postValue(authResultTask)
-                } else {
-                errorLiveData.postValue("Account already exists. Please sign in instead.")
+    fun register(email: String, password: String, fullName: String?) {
+        checkUserExists(email) { exists ->
+            println("${email}:  ${exists}")
+            if (!exists) {
+                repository.registerUser(email, password)
+                    .addOnCompleteListener { authResultTask ->
+                        if (authResultTask.isSuccessful) {
+                            errorLiveData.postValue("Sign up successful.")
+                            userLiveData.postValue(firebaseAuth.currentUser)
+                            _registrationStatus.postValue(authResultTask)
+                            saveUserToFirestore(fullName)
+                        } else {
+                            println(authResultTask.exception)
+                            errorLiveData.postValue(authResultTask.exception?.message)
+                            _registrationStatus.postValue(authResultTask)
+                        }
+                    }
+            } else {
+                errorLiveData.postValue("The email address is already in use by another account.")
             }
-            _registrationStatus.postValue(authResultTask)
         }
     }
-    fun logout() {
+    fun logout(googleSignInClient: GoogleSignInClient) {
         repository.signOut()
         firebaseAuth.signOut()
+        googleSignInClient.signOut()
         // Update any LiveData or state as needed
         _loginStatus.postValue(null)
         userLiveData.postValue(null)
@@ -158,6 +189,10 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             object : FacebookCallback<LoginResult> {
                 override fun onSuccess(result: LoginResult) {
                     handleFacebookAccessToken(result.accessToken, signIn)
+                    if (!signIn) {
+                        saveUserToFirestore()
+                    }
+
                 }
 
                 override fun onCancel() {
@@ -171,73 +206,71 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     }
 
 
-    fun handleFacebookAccessToken(token: AccessToken, signIn: Boolean = true) {
-        val request = GraphRequest.newMeRequest(token) { jsonObject, response ->
-            try {
-                val email = jsonObject?.getString("email")
-                val credential = FacebookAuthProvider.getCredential(token.token)
-                if (email != null) {
-                    proceedWithFirebaseSignIn(credential, signIn)
+    fun proceedWithFirebaseSignIn(credential: AuthCredential, signIn: Boolean = true) {
+    FirebaseAuth.getInstance().signInWithCredential(credential)
+        .addOnCompleteListener { authResultTask ->
+            if (authResultTask.isSuccessful) {
+                if (signIn) {
+                    _loginStatus.postValue(authResultTask)
+                    userLiveData.postValue(firebaseAuth.currentUser)
+                    errorLiveData.postValue("Sign in successful.")
+                } else {
+                    errorLiveData.postValue("Sign up successful.")
+                    userLiveData.postValue(firebaseAuth.currentUser)
+                    saveUserToFirestore()
+                    _registrationStatus.postValue(authResultTask)
                 }
-            } catch (e: JSONException) {
-                errorLiveData.postValue("Failed to parse email from Facebook data.")
             }
         }
+}
+    fun saveUserToFirestore(fullName: String? = null) {
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
 
-        val parameters = Bundle()
-        parameters.putString("fields", "id,name,email")
-        request.parameters = parameters
-        request.executeAsync()
-    }
+        if (user != null) {
+            val db = FirebaseFirestore.getInstance()
+            // SimpleDateFormat to format timestamps in a readable format
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
-    fun checkIfNewUser(credential: AuthCredential): Boolean? {
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-            .addOnCompleteListener { authResultTask ->
-                isNewUser = authResultTask.result.additionalUserInfo?.isNewUser
-                println("YENİ KULLANICI" + isNewUser)
+            val userMap = hashMapOf(
+                "uid" to user.uid,
+                "name" to user.displayName,
+                "email" to user.email,
+                "provider" to user.providerData.map { it.providerId }.joinToString(", "),
+                "createdAt" to dateFormat.format(user.metadata?.creationTimestamp ?: 0),
+                "lastSignInAt" to dateFormat.format(user.metadata?.lastSignInTimestamp ?: 0)
+            )
+            // Additional fields can be added as needed
+            if (user.displayName != null) {
+                userMap["name"] = user.displayName  // Ensures the name is included if available
+            } else if (fullName != null) {
+                userMap["name"] = fullName
+            } else {
+                userMap["name"] = null
             }
-        return isNewUser;
-    }
-    fun proceedWithFirebaseSignIn(credential: AuthCredential, signIn: Boolean = true) {
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-            .addOnCompleteListener { authResultTask ->
-                isNewUser = authResultTask.result.additionalUserInfo?.isNewUser
-                println("YENİ KULLANICI" + isNewUser)
-                if (signIn) {
-                    if (isNewUser == true) {
-                        errorLiveData.postValue("No account found. Please sign up before signing in.")
-                        return@addOnCompleteListener
-                    } else {
-                        if (authResultTask.isSuccessful) {
-                            _loginStatus.postValue(authResultTask)
-                            userLiveData.postValue(firebaseAuth.currentUser)
-                            errorLiveData.postValue("Sign in successful.")
-                        } else {
-                            errorLiveData.postValue("Authentication failed: ${authResultTask.exception?.message}")
-                        }
-                    }
-                } else {
-                    if (isNewUser == true) {
-                        if (authResultTask.isSuccessful) {
-                            errorLiveData.postValue("Sign up successful.")
-                            userLiveData.postValue(firebaseAuth.currentUser)
-                            _registrationStatus.postValue(authResultTask)
-                        } else {
-                            errorLiveData.postValue("Authentication failed: ${authResultTask.exception?.message}")
-                        }
-                    } else {
-                        errorLiveData.postValue("Account already exists. Please sign in instead.")
-                        return@addOnCompleteListener
-                    }
+
+            // Document reference based on user ID
+            val userDocRef = db.collection("users").document(user.uid)
+
+            userDocRef.set(userMap)
+                .addOnSuccessListener {
+                    println("User data saved successfully")
                 }
-            }
+                .addOnFailureListener { e ->
+                    println("Error saving user data: $e")
+                }
+        } else {
+            println("No authenticated user found")
+        }
     }
-        fun setupTextWatchers(
+
+    fun setupTextWatchers(
             email: EditText,
             password: EditText,
             fullName: EditText? = null,
             button: Button,
-            context: Context
+            context: Context,
+            signIn: Boolean = true
         ) {
 
             email.addTextChangedListener(object : TextWatcher {
@@ -288,6 +321,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    println(s.toString())
                     checkFullNameEmpty(s.toString())
                 }
 
@@ -305,7 +339,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (fullName != null) {
+                    if (!signIn) {
                         updateButtonState(button, context, signIn = false);
                     } else {
                         updateButtonState(button, context);
@@ -318,7 +352,6 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             email.addTextChangedListener(textWatcher)
             password.addTextChangedListener(textWatcher)
             fullName?.addTextChangedListener(textWatcher)
-
         }
 
         private fun updateButtonState(button: Button, context: Context, signIn: Boolean = true) {
@@ -369,80 +402,6 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                 observeShake(fullNameShouldShake, it, context, viewLifecycleOwner)
             }
         }
-
-        fun isPolicyChecked(policyCheckbox: CheckBox): Boolean {
-            if (!policyCheckbox.isChecked) {
-                errorLiveData.postValue("Please read and agree to the Terms & Policy before sign up.")
-                return false
-            } else {
-                return true
-            }
-        }
-
-        fun validateAuthentication(
-            authType: String,
-            email: String? = null,
-            password: String? = null,
-            signIn: Boolean = true,
-            policyCheckbox: CheckBox? = null,
-            vetCheckBox: CheckBox? = null,
-            context: Context? = null,
-            activity: Activity? = null,
-            callbackManager: CallbackManager? = null,
-            navigateToVetReg: (() -> Unit)? = null,
-            navigateToHome: (() -> Unit)? = null
-        ) {
-            if (!signIn && !(isPolicyChecked(policyCheckbox!!))) {
-                return
-            }
-            if (!signIn && vetCheckBox!!.isChecked) {
-                navigateToVetReg?.invoke()
-            }
-            when (authType) {
-                "Firebase" -> {
-                    if (!isAuthenticationValid(email!!, password!!)) {
-                        return
-                    } else {
-                        handleFirebaseAuthentication(
-                            signIn,
-                            email,
-                            password
-                        ) { navigateToHome?.invoke() }
-                    }
-                }
-
-                "Google" -> handleGoogleAuthentication(activity!!)
-                "Facebook" -> handleFacebookAuthentication(activity!!, callbackManager)
-            }
-        }
-
-        private fun isAuthenticationValid(email: String, password: String): Boolean {
-            var isValid = true
-            if (!validateEmail(email)) {
-                errorLiveData.postValue("Please enter a valid email address.")
-                isValid = false
-            }
-            if (!validatePassword(password)) {
-                errorLiveData.postValue("Password can't be be 6 or less characters")
-                isValid = false
-            }
-            return isValid
-        }
-
-        private fun handleFirebaseAuthentication(
-            signIn: Boolean? = true,
-            email: String,
-            password: String,
-            navigateToHome: (() -> Unit)
-        ) {
-            if (signIn == true) {
-                println("LOGIN")
-                login(email, password)
-            } else {
-                register(email, password)
-            }
-        }
-
         fun setupGoogleSignIn(activity: Activity): GoogleSignInClient {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(activity.getString(R.string.default_web_client_id))
@@ -451,48 +410,116 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             return GoogleSignIn.getClient(activity, gso)
         }
 
-        fun handleGoogleAuthentication(activity: Activity) {
-            googleSignInClient.revokeAccess().addOnCompleteListener { revokeTask ->
-                if (revokeTask.isSuccessful) {
-                    val signInIntent = googleSignInClient.signInIntent
-                    activity.startActivityForResult(
-                        signInIntent,
-                        1001
-                    ) // Request code for Google SignIn
+
+    fun firebaseAuthWithGoogle(idToken: String?, signIn: Boolean = true) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Sign-in success, update the UI with the signed-in user's information
+                    if (signIn) {
+                        _loginStatus.postValue(task)
+                    } else {
+                        saveUserToFirestore()
+                    }
+
                 } else {
-                    errorLiveData.postValue("Failed to revoke previous sessions: ${revokeTask.exception?.message}")
+                    // If sign-in fails, display a message to the user.
+                    errorLiveData.postValue("Authentication failed: ${task.exception?.message}")
+                }
+            }
+    }
+
+        fun handleGoogleSignInResult(data: Intent?, requestCode: Int, signIn: Boolean = true) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            if (requestCode == 1001) {
+                try {
+                    val account = task.getResult(ApiException::class.java)
+                    account?.email?.let { email ->
+                        checkUserExists(email) { exists ->
+                            println("${account.email}: ${signIn},  ${exists}")
+                            if (exists) {
+                                if (!signIn) {
+                                    errorLiveData.postValue("Account already signed up. Please sign in instead.")
+                                } else {
+                                    firebaseAuthWithGoogle(account.idToken, signIn) //sign in
+                                }
+                            } else {
+                                if (signIn) {
+                                    errorLiveData.postValue("Please sign up before signing in.")
+                                } else {
+                                    firebaseAuthWithGoogle(account.idToken, signIn)
+                                }
+                            }
+                        }
+                    }
+                } catch (e: ApiException) {
+                    errorLiveData.postValue("Google sign-in failed: ${e.statusCode}")
                 }
             }
         }
 
-        // Handle Google SignIn result
-        fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>, signIn: Boolean = true) {
-            try {
-                val account = task.getResult(ApiException::class.java)
-                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-                proceedWithFirebaseSignIn(credential, signIn)
 
+      fun handleFacebookAccessToken(token: AccessToken, signIn: Boolean = true) {
+      val request = GraphRequest.newMeRequest(token) { jsonObject, response ->
+          try {
+              val email = jsonObject?.getString("email")?.trim()?.lowercase()
+              if (email != null) {
+                  checkUserExists(email) { exists ->
+                      println("${email}: $exists")
+                      if (exists) {
+                          if (!signIn) {
+                              errorLiveData.postValue("Account already signed up. Please sign in instead.")
+                          } else {
+                              val credential = FacebookAuthProvider.getCredential(token.token) //sign in
+                              proceedWithFirebaseSignIn(credential, signIn)
+                          }
+                      } else {
+                          if (signIn) {
+                              errorLiveData.postValue("Please sign up before signing in.")
+                          } else {
+                              val credential = FacebookAuthProvider.getCredential(token.token)
+                              proceedWithFirebaseSignIn(credential, signIn) //sign up
+                          }
+                      }
+                  }
+              } else {
+                  errorLiveData.postValue("Email not found from Facebook.")
+              }
+          } catch (e: JSONException) {
+              errorLiveData.postValue("Failed to parse email from Facebook data: ${e.message}")
+          }
+      }
 
-            } catch (e: ApiException) {
-                errorLiveData.postValue(
-                    "Google sign-in failed: ${
-                        GoogleSignInStatusCodes.getStatusCodeString(
-                            e.statusCode
-                        )
-                    }"
-                )
-            }
+      val parameters = Bundle()
+      parameters.putString("fields", "id,name,email")
+      request.parameters = parameters
+      request.executeAsync()
+      }
+
+    fun checkUserExists(email: String, onComplete: (exists: Boolean) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        val emailLowercase = email.trim().lowercase()
+        try {
+            db.collection("users").whereEqualTo("email", emailLowercase).get()
+                .addOnSuccessListener { documents ->
+                    val exists = !documents.isEmpty
+                    println("Query for '$emailLowercase': Found = $exists")
+                    onComplete(exists)
+                }
+                .addOnFailureListener { exception ->
+                    println("Failed to check user '$emailLowercase': ${exception.message}")
+                    errorLiveData.postValue("Failed to check user: ${exception.message}")
+                    onComplete(false)  // Assume user does not exist if there's a failure
+                }
+        } catch (e: Exception) {
+            println(e.message)
         }
-
-        private fun handleFacebookAuthentication(
-            activity: Activity?,
-            callbackManager: CallbackManager?
-        ) {
-            setupFacebookSignIn(callbackManager!!)
-            val permissions = listOf("email", "public_profile")
-            LoginManager.getInstance().logInWithReadPermissions(activity!!, permissions)
-        }
-
 
     }
+
+
+
+
+}
 
