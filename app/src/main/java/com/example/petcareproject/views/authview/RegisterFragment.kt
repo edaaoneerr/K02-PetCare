@@ -1,4 +1,4 @@
-package com.example.petcareproject.view.authview
+package com.example.petcareproject.views.authview
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import com.example.petcareproject.databinding.FragmentRegisterBinding
 import com.example.petcareproject.factory.AuthViewModelFactory
 import com.example.petcareproject.repository.AuthRepository
-import com.example.petcareproject.viewmodel.AuthViewModel
+import com.example.petcareproject.viewmodels.AuthViewModel
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -50,16 +50,27 @@ class RegisterFragment : Fragment() {
         viewModel.setupFacebookSignIn(callbackManager, signIn = false)
 
         binding.googleButtonLayout.setOnClickListener {
-            // Ensure previous Google sign-ins are cleared before starting a new sign-in attempt.
-            googleSignInClient.revokeAccess().addOnCompleteListener {
-                val signInIntent = googleSignInClient.signInIntent
-                startActivityForResult(signInIntent, 1001) // Request code for Google SignIn
+            if (binding.policyCheckbox.isChecked) {
+                // Ensure previous Google sign-ins are cleared before starting a new sign-in attempt.
+                googleSignInClient.revokeAccess().addOnCompleteListener {
+                    val signInIntent = googleSignInClient.signInIntent
+                    startActivityForResult(signInIntent, 1001) // Request code for Google SignIn
+                }
+            } else {
+                viewModel.errorLiveData.postValue("Please read and agree to Terms and Policy before sign up.")
             }
+
         }
 
         binding.facebookLoginLayout.setOnClickListener {
-            val permissions = listOf("email", "public_profile")
-            LoginManager.getInstance().logInWithReadPermissions(this, permissions)
+            if (binding.policyCheckbox.isChecked) {
+                // Ensure previous Google sign-ins are cleared before starting a new sign-in attempt.
+                val permissions = listOf("email", "public_profile")
+                LoginManager.getInstance().logInWithReadPermissions(this, permissions)
+            } else {
+                viewModel.errorLiveData.postValue("Please read and agree to Terms and Policy before sign up.")
+            }
+
 
         }
         val email = binding.emailRegText
@@ -90,27 +101,29 @@ class RegisterFragment : Fragment() {
                     }
                 }
             }*/
-
-
-
+        
             binding.registerButton.setOnClickListener {
-                val emailText = binding.emailRegText.text.toString()
-                val passwordText = binding.passwordText.text.toString()
-                val fullNameText = binding.fullNameText.text.toString()
+                if (binding.policyCheckbox.isChecked) {
+                    val emailText = binding.emailRegText.text.toString()
+                    val passwordText = binding.passwordText.text.toString()
+                    val fullNameText = binding.fullNameText.text.toString()
 
-                var hasError = false
-                if (!viewModel.validateEmail(emailText)) {
-                    Toast.makeText(context, "Please enter a valid email address.", Toast.LENGTH_LONG).show()
-                    hasError = true
+                    var hasError = false
+                    if (!viewModel.validateEmail(emailText)) {
+                        Toast.makeText(context, "Please enter a valid email address.", Toast.LENGTH_LONG).show()
+                        hasError = true
+                    }
+                    if (!viewModel.validatePassword(passwordText)) {
+                        Toast.makeText(context, "Password cannot be less than 6 characters long.", Toast.LENGTH_LONG).show()
+                        hasError = true
+                    }
+                    if (!hasError) {
+                        viewModel.register(email = binding.emailRegText.text.toString(), password = binding.passwordText.text.toString(), fullName = fullNameText)
+                    }
+                } else {
+                    viewModel.errorLiveData.postValue("Please read and agree to Terms and Policy before sign up.")
                 }
-                if (!viewModel.validatePassword(passwordText)) {
-                    Toast.makeText(context, "Password cannot be less than 6 characters long.", Toast.LENGTH_LONG).show()
-                    hasError = true
-                }
-                if (!hasError) {
-                    viewModel.register(email = binding.emailRegText.text.toString(), password = binding.passwordText.text.toString(), fullName = fullNameText)
 
-                }
             }
 
             viewModel.errorLiveData.observe(viewLifecycleOwner) {

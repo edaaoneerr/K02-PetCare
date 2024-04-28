@@ -19,8 +19,9 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="warning" />
-                            <entry key="sourceFile" value="C:\Users\edaao\OneDrive\Masaüstü\work, work, work!\class-materials\pet-app\pet-care\warning.svg" />
+                            <entry key="autoMirrored" value="true" />
+                            <entry key="outputName" value="location_pin_icon" />
+                            <entry key="sourceFile" value="C:\Users\edaao\Downloads\290112_gps_location_map_marker_navigation_icon.svg" />
                           </map>
                         </option>
                       </PersistentState>

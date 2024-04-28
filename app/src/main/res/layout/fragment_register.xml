@@ -5,14 +5,14 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.petcareproject.viewmodel.AuthViewModel" />
+            type="com.example.petcareproject.viewmodels.AuthViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:backgroundTint="@color/white"
-        tools:context=".view.authview.RegisterFragment">
+        tools:context=".views.authview.RegisterFragment">
 
         <TextView
             android:id="@+id/regWelcomingMessage"

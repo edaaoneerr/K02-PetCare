@@ -1,4 +1,4 @@
-package com.example.petcareproject.view.greetingview
+package com.example.petcareproject.views.greetingview
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

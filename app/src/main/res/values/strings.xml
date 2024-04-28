@@ -18,4 +18,7 @@
     <string name="facebook_app_id">373566212345697</string>
     <string name="fb_login_protocol_scheme">fb373566212345697</string>
     <string name="facebook_client_token">60ab791a499f85671d8c827ccf69163d</string>
+
+    <string name="distance_format">%.2f km</string>
+
 </resources>

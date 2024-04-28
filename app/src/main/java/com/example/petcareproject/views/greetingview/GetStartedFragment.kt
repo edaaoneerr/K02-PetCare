@@ -1,4 +1,4 @@
-package com.example.petcareproject.view.greetingview
+package com.example.petcareproject.views.greetingview
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -29,7 +29,7 @@ class GetStartedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        /* view.findViewById<Button>(R.id.registerButton).setOnClickListener {
+        /* views.findViewById<Button>(R.id.registerButton).setOnClickListener {
             val action = GetStartedFragmentDirections.actionGetStartedFragmentToGetStartedFragment2()
             findNavController().navigate(action)
         }*/

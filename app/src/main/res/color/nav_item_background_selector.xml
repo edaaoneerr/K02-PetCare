@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/nav_item_background_selector.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <color android:drawable="@android:color/transparent" android:state_selected="true"/>  <!-- No background when selected -->
+    <color android:drawable="@android:color/transparent"/>  <!-- No background by default -->
+</selector>

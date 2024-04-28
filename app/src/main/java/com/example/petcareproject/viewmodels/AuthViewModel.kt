@@ -1,4 +1,4 @@
-package com.example.petcareproject.viewmodel
+package com.example.petcareproject.viewmodels
 
 import android.app.Activity
 import android.content.Context
@@ -496,6 +496,8 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
       request.parameters = parameters
       request.executeAsync()
       }
+
+
 
     fun checkUserExists(email: String, onComplete: (exists: Boolean) -> Unit) {
         val db = FirebaseFirestore.getInstance()

@@ -1,4 +1,4 @@
-package com.example.petcareproject.view.greetingview
+package com.example.petcareproject.views.greetingview
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,10 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import com.example.petcareproject.R
-import com.example.petcareproject.adapter.ViewPagerAdapter
-import com.example.petcareproject.view.greetingview.GetStartedFragment
-import com.example.petcareproject.view.greetingview.GetStartedFragment2
-import com.example.petcareproject.view.greetingview.GetStartedFragment3
+import com.example.petcareproject.adapters.ViewPagerAdapter
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
 
 

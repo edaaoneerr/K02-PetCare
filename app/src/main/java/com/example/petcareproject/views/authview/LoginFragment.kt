@@ -1,4 +1,4 @@
-package com.example.petcareproject.view.authview
+package com.example.petcareproject.views.authview
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -14,7 +14,7 @@ import com.example.petcareproject.R
 import com.example.petcareproject.databinding.FragmentLoginBinding
 import com.example.petcareproject.factory.AuthViewModelFactory
 import com.example.petcareproject.repository.AuthRepository
-import com.example.petcareproject.viewmodel.AuthViewModel
+import com.example.petcareproject.viewmodels.AuthViewModel
 import com.facebook.CallbackManager
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInClient

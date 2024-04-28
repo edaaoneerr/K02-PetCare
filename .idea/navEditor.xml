@@ -142,7 +142,24 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_registerFragment_to_vetRegisterFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="vetClinicListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1087" />
+                            <option name="y" value="-843" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -155,6 +172,15 @@
                             <option name="x" value="426" />
                             <option name="y" value="-1132" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_vetRegisterFragment_to_homeFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

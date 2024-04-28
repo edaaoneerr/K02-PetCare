@@ -1,4 +1,4 @@
-package com.example.petcareproject.view.authview
+package com.example.petcareproject.views.authview
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import com.example.petcareproject.databinding.FragmentVetRegisterBinding
 import com.example.petcareproject.factory.AuthViewModelFactory
 import com.example.petcareproject.repository.AuthRepository
-import com.example.petcareproject.viewmodel.AuthViewModel
+import com.example.petcareproject.viewmodels.AuthViewModel
 
 class VetRegisterFragment : Fragment() {
     private var _binding: FragmentVetRegisterBinding? = null

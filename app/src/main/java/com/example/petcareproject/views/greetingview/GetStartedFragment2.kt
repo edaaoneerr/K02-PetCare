@@ -1,4 +1,4 @@
-package com.example.petcareproject.view.greetingview
+package com.example.petcareproject.views.greetingview
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -27,7 +27,7 @@ class GetStartedFragment2 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /* view.findViewById<Button>(R.id.registerButton).setOnClickListener {
+        /* views.findViewById<Button>(R.id.registerButton).setOnClickListener {
             val action = GetStartedFragment2Directions.actionGetStartedFragment2ToGetStartedFragment3()
             findNavController().navigate(action)
         }*/

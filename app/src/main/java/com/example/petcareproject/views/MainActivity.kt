@@ -1,4 +1,4 @@
-package com.example.petcareproject.view
+package com.example.petcareproject.views
 
 import android.content.Context
 import android.os.Bundle
