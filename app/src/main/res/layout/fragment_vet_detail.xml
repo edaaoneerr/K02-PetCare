@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".views.VetDetailFragment">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    android:paddingHorizontal="20dp"
+    android:elevation="3dp"
+    android:clickable="true"
+    android:orientation="vertical"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    >
+    <ImageView
+        android:id="@+id/vetClinicImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="5dp"
+        tools:srcCompat="@tools:sample/avatars[6]"
+        android:background="@drawable/image_shape"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vetClinicLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintStart_toEndOf="@id/vetClinicImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/vetClinicName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="John Wilson"
+            android:fontFamily="@font/poppins_bold"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/vetClinicLayout"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+        <ToggleButton
+            android:id="@+id/button_favorite"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/button_favourite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:checked="false"
+            android:text=""
+            android:textOff=""
+            android:textOn=""/>
+
+        <RelativeLayout
+            android:id="@+id/vetSpecialtyLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="2dp"
+            app:layout_constraintTop_toBottomOf="@id/vetClinicName"
+            app:layout_constraintStart_toStartOf="@id/vetClinicLayout">
+
+            <ImageView
+                android:id="@+id/vetSpecialtyIcon"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:tint="@color/pet"
+                android:layout_centerVertical="true"
+                android:src="@drawable/paw_icon" />
+            <TextView
+                android:id="@+id/vetClinicSpecialty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="2dp"
+                android:fontFamily="@font/poppins"
+                android:text="Cardiology"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/vetDistanceLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/vetSpecialtyLayout"
+            app:layout_constraintStart_toStartOf="@id/vetClinicLayout"
+            >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                app:tint="@color/green"
+                android:src="@drawable/location_pin_icon" />
+
+            <TextView
+                android:id="@+id/vetClinicDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:fontFamily="@font/poppins"
+                android:text="Distance"
+                android:textSize="12sp"
+                />
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/vetClinicRatingLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            app:layout_constraintTop_toBottomOf="@id/vetDistanceLayout"
+            app:layout_constraintStart_toStartOf="@id/vetClinicLayout">
+            <ImageView
+                android:id="@+id/vetClinicRatingStar"
+                android:layout_height="15dp"
+                android:layout_width="15dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/star_icon"/>
+            <TextView
+                android:id="@+id/vetClinicRating"
+                android:text="4.8"
+                android:textSize="12sp"
+                android:fontFamily="@font/poppins_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/vetButtonLayout"
+        app:layout_constraintTop_toBottomOf="@id/vetClinicImage"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sendMessageButton"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        app:cornerRadius="10dp"
+        android:text="Send Message"
+        android:layout_marginEnd="4dp"
+        android:backgroundTint="@color/pet"
+        android:layout_height="50dp"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bookNowButton"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        app:cornerRadius="10dp"
+        android:text="Quick Call"
+        android:layout_marginStart="4dp"
+        android:backgroundTint="@color/pet"
+        android:layout_height="50dp"
+        />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/quickCallButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/green"
+        app:cornerRadius="10dp"
+        android:text="Book Now"
+        android:fontFamily="@font/poppins_bold"
+        app:layout_constraintTop_toBottomOf="@id/vetButtonLayout"
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

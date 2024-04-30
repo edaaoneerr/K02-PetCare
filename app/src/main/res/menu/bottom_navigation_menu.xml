@@ -7,12 +7,12 @@
     <item android:id="@+id/pets"
         android:title="Pets"
         android:icon="@drawable/pet_icon" />
+    <item android:id="@+id/maps"
+        android:title="Shop"
+        android:icon="@drawable/shop_icon" />
     <item android:id="@+id/bookings"
         android:title="Bookings"
         android:icon="@drawable/booking_icon" />
-    <item android:id="@+id/messages"
-        android:title="Messages"
-        android:icon="@drawable/message_icon" />
     <item android:id="@+id/profile"
         android:title="Profile"
         android:icon="@drawable/profile_icon" />

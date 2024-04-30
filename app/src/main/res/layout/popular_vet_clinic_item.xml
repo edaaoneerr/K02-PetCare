@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clickable="true"
+    android:padding="12dp"
     android:orientation="vertical">
 
     <ImageView
@@ -20,7 +20,8 @@
     <LinearLayout
         android:id="@+id/vetClinicRatingLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <RatingBar
             android:id="@+id/vetClinicRatingStar"
@@ -37,6 +38,7 @@
         <TextView
             android:id="@+id/vetClinicRating"
             android:text="4.8"
+            android:fontFamily="@font/poppins"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
@@ -47,26 +49,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="John Wilson"
+        android:textSize="14sp"
+        android:fontFamily="@font/poppins_medium"
         />
     <TextView
         android:id="@+id/vetClinicSpecialty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cardiology"
+        android:textSize="12sp"
+        android:fontFamily="@font/poppins"
         />
 
     <TextView
         android:id="@+id/vetClinicDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:fontFamily="@font/poppins"
         android:text="Distance"
-        />
-
-    <TextView
-        android:id="@+id/vetType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="POPULARRRR VET CLINIC ITEM"
         />
 
 

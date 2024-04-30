@@ -1,63 +1,38 @@
 package com.example.petcareproject.views
 
-import android.Manifest
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.example.petcareproject.R
+import com.example.petcareproject.adapters.CampaignCarouselPagerAdapter
 import com.example.petcareproject.adapters.PopularVeterinaryClinicAdapter
 import com.example.petcareproject.adapters.ServiceCategoryAdapter
 import com.example.petcareproject.databinding.FragmentHomeBinding
-import com.example.petcareproject.factory.AuthViewModelFactory
 import com.example.petcareproject.model.ServiceCategory
 import com.example.petcareproject.model.VeterinaryClinic
-import com.example.petcareproject.repository.AuthRepository
-import com.example.petcareproject.viewmodels.AuthViewModel
+import com.example.petcareproject.viewmodels.VetClinicListViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.gson.JsonParser
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.BufferedReader
-import java.io.ByteArrayOutputStream
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory(AuthRepository())
-    }
+
+
+    private val viewModel: VetClinicListViewModel by viewModels()
     private var locationRequest: LocationRequest = LocationRequest.create().apply {
         interval = 10000 // Update interval in milliseconds
         fastestInterval = 5000 // Fastest update interval in milliseconds
@@ -96,28 +71,6 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            val imageUri = data.data
-            // Use Glide to convert URI to Bitmap
-            Glide.with(this)
-                .asBitmap()
-                .load(imageUri)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        val baos = ByteArrayOutputStream()
-                        resource.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                        val data = baos.toByteArray()
-                        println(data)
-                    }
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-                })
-        }
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Removing tint from icons and background from the BottomNavigationView
@@ -127,16 +80,47 @@ class HomeFragment : Fragment() {
         binding.seeAllDoctors.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_vetClinicListFragment)
         }
+        /*val bottomNav = binding.bottomNavigation
+        bottomNav.setOnItemSelectedListener {
+            println(it.title)
+            when (it.title) {
+                "Maps" -> {
+                    true
+                }
+                *//*R.id.pets -> {
+                    loadFragment(SettingFragment())
+                    true
+                }
+                R.id.bookings -> {
+                    loadFragment(SettingFragment())
+                    true
+                }
+                R.id.profile -> {
+                    loadFragment(SettingFragment())
+                    true
+                }*//*
 
-      /*  val viewPager = binding.campaignCarousel
+                else -> {
+                   false
+                }
+            }
+        }*/
+        println("HOME FRAGMENT CLINICS + ${viewModel.clinics}")
+        viewModel.clinics.observe(viewLifecycleOwner) { clinics ->
+            // Update your UI here
+            updateAdapter(clinics)
+        }
+
+        val viewPager = binding.campaignCarousel
         val items = listOf(R.drawable.campaign_1, R.drawable.campaign_2, R.drawable.campaign_3, R.drawable.campaign_4) // Replace with your image resources
         val adapter = CampaignCarouselPagerAdapter(items, requireContext())
         viewPager.adapter = adapter
-*/
+
     }
+
     override fun onStart() {
         super.onStart()
-        fetchLocationAndSetupClinicRecyclerView()
+        viewModel.fetchLocationAndSetupClinicRecyclerView(requireActivity(), requireContext())
         serviceCategoryAdapter?.startListening()
 
     }
@@ -152,7 +136,7 @@ class HomeFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             println("Permission granted")
-            fetchLocationAndSetupClinicRecyclerView()
+            viewModel.fetchLocationAndSetupClinicRecyclerView(requireActivity(), requireContext())
 
         }
     }
@@ -168,7 +152,7 @@ class HomeFragment : Fragment() {
         binding.serviceCategoryRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.serviceCategoryRecyclerView.adapter = serviceCategoryAdapter
     }
-    suspend fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+   /* suspend fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         return withContext(Dispatchers.IO) { // Switch to IO dispatcher for network calls
             val apiKey = "55fb6421-e6d5-4dc2-adb4-537fafa8a328" // Replace this with your actual API key
             val urlString = "https://graphhopper.com/api/1/route?point=$lat1,$lon1&point=$lat2,$lon2&vehicle=car&key=$apiKey"
@@ -192,8 +176,8 @@ class HomeFragment : Fragment() {
             return distance
         }
         return 0.0 // Return 0.0 if no distance is found
-    }
-    private fun fetchLocationAndSetupClinicRecyclerView() {
+    }*/
+ /*   private fun fetchLocationAndSetupClinicRecyclerView() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -217,8 +201,8 @@ class HomeFragment : Fragment() {
                 println("Failed to get user location: ${it.message}")
             }
         }
-    }
-    fun checkDeviceSettings() {
+    }*/
+ /*   fun checkDeviceSettings() {
         val result = LocationServices.getSettingsClient(requireContext()).checkLocationSettings(lrsBuilder!!.build())
         result.addOnSuccessListener {
             Toast.makeText(context, "Success GPS Enabled", Toast.LENGTH_LONG).show()
@@ -232,8 +216,9 @@ class HomeFragment : Fragment() {
     }
     private fun setupClinicRecyclerView() {
         fetchClinicsAndUpdateDistance(userLat, userLng)
-    }
-    private fun fetchClinicsAndUpdateDistance(userLat: Double, userLng: Double) {
+
+    }*/
+   /* private fun fetchClinicsAndUpdateDistance(userLat: Double, userLng: Double) {
         val db = FirebaseFirestore.getInstance()
         db.collection("veterinary_clinics")
             .orderBy("rating", Query.Direction.DESCENDING)
@@ -285,7 +270,7 @@ class HomeFragment : Fragment() {
             .addOnFailureListener { exception ->
                 println("Error getting documents: $exception")
             }
-    }
+    }*/
     private fun updateAdapter(clinics: List<VeterinaryClinic>) {
         popularVetClinicsAdapter = PopularVeterinaryClinicAdapter(clinics)
         binding.popularVetClinicsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)

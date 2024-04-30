@@ -1,11 +1,7 @@
 package com.example.petcareproject.views
 
 import android.Manifest
-import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,14 +10,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import com.example.petcareproject.adapters.ServiceCategoryAdapter
 import com.example.petcareproject.adapters.VeterinaryClinicAdapter
 import com.example.petcareproject.databinding.FragmentVetClinicListBinding
+import com.example.petcareproject.model.ServiceCategory
 import com.example.petcareproject.model.VeterinaryClinic
+import com.example.petcareproject.viewmodels.VetClinicListViewModel
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
@@ -34,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
-import java.io.ByteArrayOutputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -45,6 +42,7 @@ class VetClinicListFragment : Fragment() {
     private var _binding: FragmentVetClinicListBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: VetClinicListViewModel by viewModels()
     private var locationRequest: LocationRequest = LocationRequest.create().apply {
         interval = 10000 // Update interval in milliseconds
         fastestInterval = 5000 // Fastest update interval in milliseconds
@@ -54,6 +52,7 @@ class VetClinicListFragment : Fragment() {
     //private var fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var serviceCategoryAdapter: FirestoreRecyclerAdapter<ServiceCategory, ServiceCategoryAdapter.ServiceCategoryViewHolder>? = null
     private var vetClinicsAdapter: VeterinaryClinicAdapter? = null
 
     var userLat: Double = 0.0
@@ -72,6 +71,7 @@ class VetClinicListFragment : Fragment() {
         private const val PICK_IMAGE_REQUEST = 1
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -81,48 +81,25 @@ class VetClinicListFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            val imageUri = data.data
-            // Use Glide to convert URI to Bitmap
-            Glide.with(this)
-                .asBitmap()
-                .load(imageUri)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        val baos = ByteArrayOutputStream()
-                        resource.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                        val data = baos.toByteArray()
-                        println(data)
-                    }
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-                })
-        }
-    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Removing tint from icons and background from the BottomNavigationView
 
-        /*  val viewPager = binding.campaignCarousel
-          val items = listOf(R.drawable.campaign_1, R.drawable.campaign_2, R.drawable.campaign_3, R.drawable.campaign_4) // Replace with your image resources
-          val adapter = CampaignCarouselPagerAdapter(items, requireContext())
-          viewPager.adapter = adapter
-  */
+        viewModel.clinics.observe(viewLifecycleOwner) { clinics ->
+            // Update your UI here
+            updateAdapter(clinics)
+        }
+
     }
     override fun onStart() {
         super.onStart()
-        fetchLocationAndSetupClinicRecyclerView()
-
+        viewModel.fetchLocationAndSetupClinicRecyclerView(requireActivity(), requireContext())
     }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             println("Permission granted")
-            fetchLocationAndSetupClinicRecyclerView()
+            viewModel.fetchLocationAndSetupClinicRecyclerView(requireActivity(), requireContext())
 
         }
     }

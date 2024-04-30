@@ -85,5 +85,4 @@
         android:id="@+id/vetClinicListFragment"
         android:name="com.example.petcareproject.views.VetClinicListFragment"
         android:label="VetClinicListFragment" />
-
 </navigation>

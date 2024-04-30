@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFFFF</color>00C2CB
+    <color name="pet">#00C2CB</color>
+<!--
     <color name="pet">#ff4048fd</color>
+-->
+    <color name="green">#0EBE7F</color>
     <color name="grey">#ffe5e4e3</color>
     <color name="dark_grey">#ff898989</color>
     <color name="hint">#ffb3b1b0</color>
