@@ -57,7 +57,7 @@
             android:id="@+id/messageIcon"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/message_icon"
+            android:src="@drawable/ic_message"
             android:layout_alignParentRight="true"
             />
 
@@ -66,7 +66,7 @@
             android:layout_alignParentLeft="true"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/notification_icon"
+            android:src="@drawable/ic_notification"
 
             />
         </RelativeLayout>
@@ -78,12 +78,11 @@
        <androidx.viewpager.widget.ViewPager
             android:id="@+id/campaignCarousel"
             android:layout_width="0dp"
-            android:layout_height="110dp"
+            android:layout_height="140dp"
             android:layout_marginVertical="10dp"
             android:layout_marginHorizontal="30dp"
             android:background="@drawable/image_shape"
            android:clipToOutline="true"
-
             android:scaleType="centerCrop"
             app:layout_constraintTop_toBottomOf="@id/healthText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -117,7 +116,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginEnd="25dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/filter_icon"
+            android:src="@drawable/ic_filter"
             />
 </RelativeLayout>
 
@@ -157,7 +156,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginHorizontal="24dp"
             android:id="@+id/serviceCategoryRecyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -166,12 +165,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/serviceCategoryLayout"
              />
-        <!-- Include your service category layout here -->
-        <!-- Use a horizontal RecyclerView or a LinearLayout with horizontal orientation -->
 
-
-        <!-- Popular Doctors Section -->
-        <!-- Use a RecyclerView and define a LinearLayoutManager with horizontal orientation -->
         <RelativeLayout
             android:id="@+id/popularDoctorsLayout"
             android:layout_width="0dp"
@@ -179,7 +173,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="15dp"
             app:layout_constraintTop_toBottomOf="@id/serviceCategoryRecyclerView">
 
 
@@ -192,16 +186,6 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/poppins_bold"
                 android:text="Popular Doctors" />
-
-
-        <!--    <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/refresh_icon"
-                android:layout_toRightOf="@id/popularDoctorsTitle"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
-                />-->
 
             <TextView
                 android:id="@+id/seeAllDoctors"
@@ -218,7 +202,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/popularVetClinicsRecyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="10dp"

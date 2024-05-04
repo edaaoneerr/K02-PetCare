@@ -1,7 +1,10 @@
 package com.example.petcareproject.model
 
 data class ServiceCategory(
-    var name: String = "",
+    var serviceCategoryId: String? = null,
+    var serviceCategoryName: String = "",
+    var serviceCategoryImage: String = "",
+
 /*
     var description: String = ""
 */

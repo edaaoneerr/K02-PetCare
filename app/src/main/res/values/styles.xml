@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomRatingBar" parent="Widget.AppCompat.RatingBar.Indicator">
+        <item name="colorControlNormal">@color/grey</item>  <!-- Color for unrated stars -->
+        <item name="colorControlActivated">@color/yellow</item>  <!-- Color for rated stars -->
+    </style>
+</resources>

@@ -1,0 +1,92 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:layout_marginTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/receivedMessageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/received_message"
+        android:padding="10dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        >
+
+        <TextView
+            android:id="@+id/receivedMessageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins"
+            android:maxWidth="250dp"
+            android:background="@drawable/received_message"
+            tools:text="Sample Text"/>
+
+        <TextView
+            android:id="@+id/receivedMessageTimestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins"
+            android:layout_marginTop="-12dp"
+            android:layout_gravity="end|bottom"
+            android:background="@drawable/received_message"
+            tools:text="4:46 PM"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sentMessageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sent_message"
+        android:padding="10dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sentMessageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="250dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins"
+            android:layout_weight="1"
+            android:background="@drawable/sent_message"
+            tools:text="Lorem Ipsum is simply dummy text of the
+         printing and typesetting industry. Lorem
+        Ipsum has been the industry's standard
+         dummy text ever since the 1500sLorem Ipsum is simply dummy text of the
+         printing and typesetting industry. Lorem
+        Ipsum has been the industry's standard
+         dummy text ever since the 1500s"/>
+        <TextView
+            android:id="@+id/sentMessageTimestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="-12dp"
+            android:layout_gravity="end|bottom"
+            android:background="@drawable/sent_message"
+            tools:text="4:46 PM"/>
+
+    </LinearLayout>
+</LinearLayout>

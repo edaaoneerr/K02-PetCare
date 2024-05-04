@@ -2,24 +2,33 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="80dp"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="32dp"
-    android:paddingVertical="20dp"
+    android:paddingHorizontal="5dp"
     android:orientation="vertical"
     android:layout_marginEnd="5dp"
-    android:background="@drawable/rounded_corners">
-
+    android:paddingVertical="10dp"
+    android:background="@drawable/rounded_corners"
+    android:gravity="center_vertical">
     <ImageView
-        android:id="@+id/serviceIcon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:id="@+id/serviceCategoryImage"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:clipToOutline="true"
+        tools:srcCompat="@drawable/ic_pet_adoption" />
+
     <TextView
-        android:id="@+id/serviceNameText"
-        android:layout_width="wrap_content"
+        android:id="@+id/serviceCategoryName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Vet"/>
+        android:layout_marginTop="7dp"
+        android:minLines="2"
+        android:textSize="10sp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Veterinary Care"
+        android:textAlignment="center"
+        android:gravity="center"
+        />
 
 </LinearLayout>

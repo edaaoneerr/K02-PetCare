@@ -56,6 +56,8 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation ("com.google.firebase:firebase-functions-ktx")
+    implementation ("com.google.firebase:firebase-installations:17.2.0")
+
 
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.1.0")
@@ -63,6 +65,9 @@ dependencies {
     implementation ("com.facebook.android:facebook-login:latest.release")
     implementation("com.google.firebase:firebase-database-ktx:20.3.1")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+    implementation ("com.google.firebase:firebase-messaging:23.4.1")
+    implementation("com.google.firebase:firebase-inappmessaging-display")
+    implementation("com.google.firebase:firebase-analytics")
 
 
     val nav_version = "2.7.7"
@@ -73,6 +78,15 @@ dependencies {
     implementation("io.getstream:avatarview-coil:1.0.7")
     implementation("com.google.android.material:material:1.11.0-alpha01")
     implementation("org.osmdroid:osmdroid-android:6.1.18")
+    implementation("com.github.borjabravo10:ReadMoreTextView:2.0.1")
+   // implementation ("com.caverock:androidsvg:1.4")
+    //implementation ("com.github.ar-android:AndroidSvgLoader:1.0.2")
+
+    implementation("io.coil-kt:coil:2.5.0")
+    implementation("io.coil-kt:coil-svg:2.5.0")
+    implementation("org.webrtc:google-webrtc:1.0.32006")
+
+
 
     implementation("ch.hsr:geohash:1.4.0")
     implementation ("com.google.android.gms:play-services-location:19.0.1")

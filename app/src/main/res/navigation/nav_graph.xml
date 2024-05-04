@@ -71,6 +71,12 @@
         <action
             android:id="@+id/action_homeFragment_to_vetClinicListFragment"
             app:destination="@id/vetClinicListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/vetRegisterFragment"
@@ -84,5 +90,34 @@
     <fragment
         android:id="@+id/vetClinicListFragment"
         android:name="com.example.petcareproject.views.VetClinicListFragment"
-        android:label="VetClinicListFragment" />
+        android:label="VetClinicListFragment" >
+        <action
+            android:id="@+id/action_vetClinicListFragment_to_vetDetailFragment"
+            app:destination="@id/vetDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/vetDetailFragment"
+        android:name="com.example.petcareproject.views.VetDetailFragment"
+        android:label="fragment_vet_detail"
+        tools:layout="@layout/fragment_vet_detail" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.petcareproject.views.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.petcareproject.views.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_messageFragment"
+            app:destination="@id/messageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.example.petcareproject.views.MessageFragment"
+        android:label="fragment_message"
+        tools:layout="@layout/fragment_message" >
+    </fragment>
 </navigation>

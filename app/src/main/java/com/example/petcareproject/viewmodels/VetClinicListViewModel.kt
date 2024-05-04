@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.petcareproject.adapters.VeterinaryClinicAdapter
+import com.example.petcareproject.model.ServiceCategory
 import com.example.petcareproject.model.VeterinaryClinic
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -53,12 +54,20 @@ class VetClinicListViewModel() : ViewModel() {
     var imageUrl: String = ""
     var rating: String = ""
     var vetDistance: Double? = 0.0
+    var clinicId: String? = ""
+    var serviceCategoryId: String = ""
+    var serviceCategoryName: String = ""
+    var serviceCategoryImage: String = ""
     private val _clinics = MutableLiveData<List<VeterinaryClinic>>()
     val clinics: LiveData<List<VeterinaryClinic>> = _clinics
+    private val _serviceCategories = MutableLiveData<List<ServiceCategory>>()
+    val serviceCategories: LiveData<List<ServiceCategory>> = _serviceCategories
+
 
     fun updateClinics(clinicsList: List<VeterinaryClinic>) {
         _clinics.postValue(clinicsList)
     }
+
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -144,6 +153,7 @@ class VetClinicListViewModel() : ViewModel() {
                         // Extract details from the document and call getDistance
                         // Update clinics list inside the coroutine
                         try {
+                            clinicId = document.id
                             name = document.getString("name") ?: ""
                             specialty = document.getString("specialty") ?: ""
                             rating = document.getString("rating") ?: ""
@@ -155,30 +165,59 @@ class VetClinicListViewModel() : ViewModel() {
                                 val clinicLat = latitude
                                 val clinicLng = longitude
                                 vetDistance = getDistance(userLat, userLng, clinicLat!!, clinicLng!!) / 1000.0
-                                clinics.add(VeterinaryClinic(name, specialty, rating, latitude!!, longitude!!, address, String.format("%.2f", vetDistance).toDouble(), imageUrl))
+                                clinics.add(VeterinaryClinic(clinicId, name, specialty, rating, latitude!!, longitude!!, address, String.format("%.2f", vetDistance).toDouble(), imageUrl))
 
                                 // Calculate distance
                                 val clinicDistance = String.format("%.2f", vetDistance).toDouble()
 
                                 // Update the clinic document with the new distance
                                 val clinicRef = document.reference
-                                println("Clinic ref" + clinicRef)
                                 clinicRef.update("distance", clinicDistance)
-
-                                println("$name, $specialty, $rating, $longitude, $latitude, $vetDistance, $imageUrl}")
+                               // println("$name, $specialty, $rating, $longitude, $latitude, $vetDistance, $imageUrl}")
                             } else {
-                                println("$name, $specialty, $rating, $longitude, $latitude}")
+                                //println("$name, $specialty, $rating, $longitude, $latitude}")
                             }
                         } catch (e: Exception) {
                             println("Could not fetch location. Please turn on from your settings.")
-                            clinics.add(VeterinaryClinic(name, specialty, rating, latitude!!, longitude!!, address, 0.0, imageUrl))
+                            clinics.add(VeterinaryClinic(clinicId, name, specialty, rating, latitude!!, longitude!!, address, 0.0, imageUrl))
                             println("Document null: $e") // or handle the exception as needed
                         }
                     }
                     // After the loop, update the adapter
-                    println("VM CLINICS + ${clinics}")
                     updateClinics(clinics)
                    // updateAdapter(clinics)
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("Error getting documents: $exception")
+            }
+    }
+
+    fun fetchServiceCategories() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("service_categories")
+            .get()
+            .addOnSuccessListener { result ->
+                val serviceCategories = mutableListOf<ServiceCategory>()
+                viewModelScope.launch { // Use lifecycleScope to launch coroutines in a Fragment
+                    result.forEach { document ->
+                        // Extract details from the document and call getDistance
+                        // Update clinics list inside the coroutine
+                        try {
+                            serviceCategoryId = document.id
+                            serviceCategoryName = document.getString("serviceCategoryName") ?: ""
+                            serviceCategoryImage = document.getString("serviceCategoryImage") ?: "" // Fetch the image URL
+
+                            serviceCategories.add(
+                                ServiceCategory(serviceCategoryId, serviceCategoryName, serviceCategoryImage))
+                            }
+                         catch (e: Exception) {
+                            println("Document null: $e") // or handle the exception as needed
+                        }
+                    }
+                    // After the loop, update the adapter
+                    _serviceCategories.postValue(serviceCategories)
+                    // updateAdapter(clinics)
                 }
             }
             .addOnFailureListener { exception ->

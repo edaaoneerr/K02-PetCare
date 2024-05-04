@@ -53,8 +53,8 @@
 
         <ToggleButton
             android:id="@+id/button_favorite"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:background="@drawable/button_favourite"
             app:layout_constraintEnd_toEndOf="parent"
@@ -78,7 +78,7 @@
                 android:layout_height="15dp"
                 app:tint="@color/pet"
                 android:layout_centerVertical="true"
-                android:src="@drawable/paw_icon" />
+                android:src="@drawable/ic_paw" />
             <TextView
                 android:id="@+id/vetClinicSpecialty"
                 android:layout_width="wrap_content"
@@ -105,7 +105,7 @@
                 android:layout_height="15dp"
                 android:layout_centerVertical="true"
                 app:tint="@color/green"
-                android:src="@drawable/location_pin_icon" />
+                android:src="@drawable/ic_location_pin" />
 
             <TextView
                 android:id="@+id/vetClinicDistance"

@@ -21,4 +21,7 @@
 
     <string name="distance_format">%.2f km</string>
 
+    <string name="channel_name">Default Channel</string>
+    <string name="channel_description">This is the default channel used for app notifications.</string>
+
 </resources>

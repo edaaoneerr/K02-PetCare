@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.petcareproject.R
 import com.example.petcareproject.databinding.FragmentRegisterBinding
 import com.example.petcareproject.factory.AuthViewModelFactory
 import com.example.petcareproject.repository.AuthRepository
@@ -107,18 +109,21 @@ class RegisterFragment : Fragment() {
                     val emailText = binding.emailRegText.text.toString()
                     val passwordText = binding.passwordText.text.toString()
                     val fullNameText = binding.fullNameText.text.toString()
-
-                    var hasError = false
-                    if (!viewModel.validateEmail(emailText)) {
-                        Toast.makeText(context, "Please enter a valid email address.", Toast.LENGTH_LONG).show()
-                        hasError = true
-                    }
-                    if (!viewModel.validatePassword(passwordText)) {
-                        Toast.makeText(context, "Password cannot be less than 6 characters long.", Toast.LENGTH_LONG).show()
-                        hasError = true
-                    }
-                    if (!hasError) {
-                        viewModel.register(email = binding.emailRegText.text.toString(), password = binding.passwordText.text.toString(), fullName = fullNameText)
+                    if (binding.vetCheckbox.isChecked) {
+                        findNavController().navigate(R.id.action_registerFragment_to_vetRegisterFragment)
+                    } else {
+                        var hasError = false
+                        if (!viewModel.validateEmail(emailText)) {
+                            Toast.makeText(context, "Please enter a valid email address.", Toast.LENGTH_LONG).show()
+                            hasError = true
+                        }
+                        if (!viewModel.validatePassword(passwordText)) {
+                            Toast.makeText(context, "Password cannot be less than 6 characters long.", Toast.LENGTH_LONG).show()
+                            hasError = true
+                        }
+                        if (!hasError) {
+                            viewModel.register(email = binding.emailRegText.text.toString(), password = binding.passwordText.text.toString(), fullName = fullNameText)
+                        }
                     }
                 } else {
                     viewModel.errorLiveData.postValue("Please read and agree to Terms and Policy before sign up.")
@@ -129,8 +134,6 @@ class RegisterFragment : Fragment() {
             viewModel.errorLiveData.observe(viewLifecycleOwner) {
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             }
-
-
 
     }
 

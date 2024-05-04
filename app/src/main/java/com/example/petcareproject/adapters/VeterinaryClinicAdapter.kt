@@ -11,8 +11,11 @@ import com.example.petcareproject.R
 import com.example.petcareproject.model.VeterinaryClinic
 
 
-class VeterinaryClinicAdapter(private val clinics: List<VeterinaryClinic>) : RecyclerView.Adapter<VeterinaryClinicAdapter.VeterinaryClinicViewHolder>() {
+class VeterinaryClinicAdapter(private val clinics: List<VeterinaryClinic>, private val listener: OnItemClickListener) : RecyclerView.Adapter<VeterinaryClinicAdapter.VeterinaryClinicViewHolder>() {
 
+    interface OnItemClickListener {
+        fun onItemClick(clinic: VeterinaryClinic?)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VeterinaryClinicViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.vet_clinic_item, parent, false)
         return VeterinaryClinicViewHolder(itemView)
@@ -20,7 +23,7 @@ class VeterinaryClinicAdapter(private val clinics: List<VeterinaryClinic>) : Rec
 
     override fun onBindViewHolder(holder: VeterinaryClinicViewHolder, position: Int) {
         val clinic = clinics[position]
-        holder.bind(clinic)
+        holder.bind(clinic, listener)
     }
 
     override fun getItemCount() = clinics.size
@@ -33,7 +36,8 @@ class VeterinaryClinicAdapter(private val clinics: List<VeterinaryClinic>) : Rec
         private val imageView: ImageView = itemView.findViewById(R.id.vetClinicImage) // Reference to an ImageView in your layout
 
 
-        fun bind(clinic: VeterinaryClinic) {
+        fun bind(clinic: VeterinaryClinic, listener: OnItemClickListener) {
+            itemView.setOnClickListener { listener.onItemClick(clinic) }
             nameTextView.text = clinic.name
             specialtyTextView.text = clinic.specialty
             ratingTextView.text = clinic.rating
