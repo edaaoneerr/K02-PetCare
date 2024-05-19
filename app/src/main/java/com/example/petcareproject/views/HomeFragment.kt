@@ -11,21 +11,26 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petcareproject.R
 import com.example.petcareproject.adapters.CampaignCarouselPagerAdapter
+import com.example.petcareproject.adapters.PopularVetAdapter
 import com.example.petcareproject.adapters.PopularVeterinaryClinicAdapter
 import com.example.petcareproject.adapters.ServiceCategoryAdapter
 import com.example.petcareproject.databinding.FragmentHomeBinding
 import com.example.petcareproject.model.ServiceCategory
+import com.example.petcareproject.model.Vet
 import com.example.petcareproject.model.VeterinaryClinic
 import com.example.petcareproject.viewmodels.VetClinicListViewModel
+import com.example.petcareproject.viewmodels.VetListViewModel
 
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: VetClinicListViewModel by viewModels()
+    private val vetViewModel: VetListViewModel by viewModels()
+    private val clinicViewModel: VetClinicListViewModel by viewModels()
     private var serviceCategoryAdapter: ServiceCategoryAdapter? = null
     private var popularVetClinicsAdapter: PopularVeterinaryClinicAdapter? = null
+    private var popularVetsAdapter: PopularVetAdapter? = null
     var name: String = ""
     var imageUrl: String = ""
     var rating: String = ""
@@ -50,9 +55,9 @@ class HomeFragment : Fragment() {
         binding.bottomNavigation.itemIconTintList = null
         binding.bottomNavigation.itemBackground = null
 
-        binding.seeAllDoctors.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_vetClinicListFragment)
-        }
+       /* binding.seeAllDoctors.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_vetListFragment)
+        }*/
         val bottomNav = binding.bottomNavigation
         bottomNav.setOnItemSelectedListener {
             println(it.title)
@@ -65,7 +70,7 @@ class HomeFragment : Fragment() {
                     true
                 }
                 "Bookings" -> {
-                    findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+                    findNavController().navigate(R.id.action_homeFragment_to_bookingsFragment)
                     true
                 }
                 "Profile" -> {
@@ -78,11 +83,29 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        viewModel.clinics.observe(viewLifecycleOwner) { clinics ->
+     /*   clinicViewModel.clinics.observe(viewLifecycleOwner) { clinics ->
             // Update your UI here
-            updateVeterinaryClinicAdapter(clinics)
+            println("HOMECLINIC")
+            println(clinics)
+            updatePopularVeterinaryClinicAdapter(clinics)
+        }*/
+        vetViewModel.vets.observe(viewLifecycleOwner) { vets ->
+            // Update your UI here
+            println("HOMEVET")
+            println(vets)
+            updatePopularVetAdapter(vets)
+
+            binding.seeAllDoctors.setOnClickListener {
+                val vetsArrayList = ArrayList(vets) // Convert your list to ArrayList
+                val bundle = Bundle().apply {
+                    putParcelableArrayList("vets", vetsArrayList)
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_vetListFragment, bundle)
+            }
+
         }
-        viewModel.serviceCategories.observe(viewLifecycleOwner) {serviceCategories ->
+        clinicViewModel.serviceCategories.observe(viewLifecycleOwner) {serviceCategories ->
+            println("HOMESERVC")
             println(serviceCategories)
             updateServiceCategoryAdapter(serviceCategories)
         }
@@ -100,8 +123,9 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.fetchLocationAndSetupClinicRecyclerView(requireActivity(), requireContext())
-        viewModel.fetchServiceCategories()
+       // clinicViewModel.fetchLocationAndSetupClinicRecyclerView(requireActivity(), requireContext())
+        clinicViewModel.fetchServiceCategories()
+        vetViewModel.fetchLocationAndSetupVetRecyclerView(requireActivity(), requireContext())
 
     }
     override fun onStop() {
@@ -115,13 +139,13 @@ class HomeFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             println("Permission granted")
-            viewModel.fetchLocationAndSetupClinicRecyclerView(requireActivity(), requireContext())
+            clinicViewModel.fetchLocationAndSetupClinicRecyclerView(requireActivity(), requireContext())
 
         }
     }
 
 
-    private fun updateVeterinaryClinicAdapter(clinics: List<VeterinaryClinic>) {
+    private fun updatePopularVeterinaryClinicAdapter(clinics: List<VeterinaryClinic>) {
         popularVetClinicsAdapter = PopularVeterinaryClinicAdapter(clinics)
 
         bundle = Bundle().apply {
@@ -130,6 +154,22 @@ class HomeFragment : Fragment() {
 
         binding.popularVetClinicsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.popularVetClinicsRecyclerView.adapter = popularVetClinicsAdapter
+    }
+    private fun updatePopularVetAdapter(vets: List<Vet>) {
+        popularVetsAdapter = PopularVetAdapter(vets, object : PopularVetAdapter.OnItemClickListener {
+            override fun onItemClick(vet: Vet?) {
+                if (vet != null) {
+                    val bundle = Bundle().apply {
+                        putParcelable("vet", vet)
+                    }
+                    findNavController().navigate(R.id.action_homeFragment_to_vetDetailFragment, bundle)
+                }
+            }
+
+        })
+
+        binding.popularVetsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.popularVetsRecyclerView.adapter = popularVetsAdapter
     }
 
     private fun updateServiceCategoryAdapter(serviceCategories: List<ServiceCategory>) {

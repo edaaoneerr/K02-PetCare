@@ -1,4 +1,5 @@
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +24,10 @@ class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter
         private val receivedTimestampTextView: TextView = itemView.findViewById(R.id.receivedMessageTimestamp)
 
         fun bind(message: Message) {
+            val TAG = "MessageAdapter"
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
             val isSender = message.senderId == currentUserId
-
+            Log.d(TAG, currentUserId.toString())
             if (isSender) {
                 sentMessageTextView.text = message.messageText
                 sentTimestampTextView.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(message.messageDate.toDate())

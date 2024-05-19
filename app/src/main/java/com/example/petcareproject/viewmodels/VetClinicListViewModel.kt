@@ -178,7 +178,7 @@ class VetClinicListViewModel() : ViewModel() {
                                 //println("$name, $specialty, $rating, $longitude, $latitude}")
                             }
                         } catch (e: Exception) {
-                            println("Could not fetch location. Please turn on from your settings.")
+                            println("Could not fetch CLINIC location. Please turn on from your settings.")
                             clinics.add(VeterinaryClinic(clinicId, name, specialty, rating, latitude!!, longitude!!, address, 0.0, imageUrl))
                             println("Document null: $e") // or handle the exception as needed
                         }

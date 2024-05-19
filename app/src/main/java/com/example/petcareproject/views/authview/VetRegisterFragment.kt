@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,7 @@ import com.example.petcareproject.viewmodels.AuthViewModel
 class VetRegisterFragment : Fragment() {
     private var _binding: FragmentVetRegisterBinding? = null
     private val binding get() = _binding!!
-
+    private val TAG = "VetAuth"
     private val viewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(AuthRepository())
     }
@@ -50,19 +51,35 @@ class VetRegisterFragment : Fragment() {
         val registerButton = binding.registerButton
         val fileCancelButton = binding.fileCancelButton
 
+
         vetIdAttachButton.setOnClickListener {
             // Check if permission is granted, if not, request permission
+
             if (checkPermission()) {
+                println("Already granted")
+
                 // Permission already granted, start file picker
                 startFilePicker()
             } else {
+                println("Asking")
+
                 // Permission not granted, request permission
                 requestPermission()
             }
         }
         registerButton.setOnClickListener {
+            val user = VetRegisterFragmentArgs.fromBundle(requireArguments()).vetUser
+            Log.d(TAG, "BUTTON URI: ${fileUri}")
+            Log.d(TAG, "BUTTON USER: ${user}")
             if (fileUri != null) {
-                // Show confirmation dialog
+                viewModel.register(
+                    email = user.userEmail,
+                    password = user.userPassword,
+                    fullName = user.userName,
+                    isVet = true,
+                    registeredVetClinic = binding.registeredVetClinic.text.toString(),
+                    vetUri = fileUri
+                )
                 showConfirmationDialog()
             } else {
                 // Show toast message
@@ -95,6 +112,7 @@ class VetRegisterFragment : Fragment() {
 
     private fun startFilePicker() {
         // Launch file picker intent
+        println("Launch file picker")
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "*/*"
         startActivityForResult(intent, FILE_REQUEST_CODE)
@@ -129,18 +147,32 @@ class VetRegisterFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // Get the URI of the selected file
             val uri = data?.data
-            // Extract file name from URI and display it
-            val fileName = getFileName(uri)
-            binding.vetAttachedFileName.text = "$fileName"
-            binding.vetAttachIdText.visibility = View.VISIBLE
-            binding.fileCancelButton.visibility = View.VISIBLE
+            if (uri != null) {
+                val fileName = getFileName(uri)
+                if (fileName.isNotEmpty()) {
+                    println(fileName)
+                    binding.vetAttachedFileName.text = fileName
+                    binding.vetAttachedFileName.visibility = View.VISIBLE
+                    binding.fileCancelButton.visibility = View.VISIBLE
+                    fileUri = uri // Make sure to update fileUri
+                    Log.d(TAG, "RESULT URI: ${fileUri}")
+
+                } else {
+                    Toast.makeText(requireContext(), "Failed to get file name, please try again.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(requireContext(), "File selection failed, please try again.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(requireContext(), "You didn't pick a file.", Toast.LENGTH_SHORT).show()
         }
     }
 
+
     private fun getFileName(uri: Uri?): String {
         var fileName = ""
+        Log.d(TAG, "FILE NAME URI: ${uri}")
         uri?.let {
             requireContext().contentResolver.query(it, null, null, null, null)?.use { cursor ->
                 val displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -149,8 +181,11 @@ class VetRegisterFragment : Fragment() {
                 }
             }
         }
+        Log.d(TAG, "FILE NAME FILE NAME: ${fileName}")
         return fileName
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

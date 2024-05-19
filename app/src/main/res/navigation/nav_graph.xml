@@ -77,6 +77,15 @@
         <action
             android:id="@+id/action_homeFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_vetListFragment"
+            app:destination="@id/vetListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_vetDetailFragment"
+            app:destination="@id/vetDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_bookingsFragment"
+            app:destination="@id/bookingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/vetRegisterFragment"
@@ -86,6 +95,9 @@
         <action
             android:id="@+id/action_vetRegisterFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="vetUser"
+            app:argType="com.example.petcareproject.model.User" />
     </fragment>
     <fragment
         android:id="@+id/vetClinicListFragment"
@@ -99,7 +111,11 @@
         android:id="@+id/vetDetailFragment"
         android:name="com.example.petcareproject.views.VetDetailFragment"
         android:label="fragment_vet_detail"
-        tools:layout="@layout/fragment_vet_detail" />
+        tools:layout="@layout/fragment_vet_detail" >
+        <action
+            android:id="@+id/action_vetDetailFragment_to_appointmentFragment"
+            app:destination="@id/appointmentFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.petcareproject.views.ProfileFragment"
@@ -120,4 +136,21 @@
         android:label="fragment_message"
         tools:layout="@layout/fragment_message" >
     </fragment>
+    <fragment
+        android:id="@+id/vetListFragment"
+        android:name="com.example.petcareproject.views.VetListFragment"
+        android:label="fragment_vet_list"
+        tools:layout="@layout/fragment_vet_list" >
+        <action
+            android:id="@+id/action_vetListFragment_to_vetDetailFragment"
+            app:destination="@id/vetDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/appointmentFragment"
+        android:name="com.example.petcareproject.views.AppointmentFragment"
+        android:label="AppointmentFragment" />
+    <fragment
+        android:id="@+id/bookingsFragment"
+        android:name="com.example.petcareproject.views.BookingFragment"
+        android:label="BookingsFragment" />
 </navigation>

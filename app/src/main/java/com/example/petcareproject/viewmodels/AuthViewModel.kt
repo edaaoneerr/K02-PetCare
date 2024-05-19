@@ -3,9 +3,11 @@ package com.example.petcareproject.viewmodels
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
@@ -36,12 +38,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
-
+    private val TAG = "VetAuth"
     private val _loginStatus = MutableLiveData<Task<AuthResult>?>()
     val loginStatus: LiveData<Task<AuthResult>?> = _loginStatus
     private val _registrationStatus = MutableLiveData<Task<AuthResult>?>()
@@ -124,7 +128,6 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         _cursorDrawable.value = if (fullName.isEmpty()) R.drawable.red_cursor else R.drawable.purple_cursor
         return fullName.isEmpty()
     }
-
     fun login(email: String, password: String) {
         checkUserExists(email) { exists ->
             println("'${email}':  ${exists}")
@@ -152,17 +155,39 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun register(email: String, password: String, fullName: String?) {
+    fun register(email: String,
+                 password: String,
+                 fullName: String?,
+                 isVet: Boolean = false,
+                 registeredVetClinic: String? = null,
+                 vetUri: Uri? = null) {
         checkUserExists(email) { exists ->
-            println("${email}:  ${exists}")
+            Log.d(TAG, "${email}:  ${exists}")
             if (!exists) {
                 repository.registerUser(email, password)
                     .addOnCompleteListener { authResultTask ->
                         if (authResultTask.isSuccessful) {
-                            errorLiveData.postValue("Sign up successful.")
-                            userLiveData.postValue(firebaseAuth.currentUser)
-                            _registrationStatus.postValue(authResultTask)
-                            saveUserToFirestore(fullName)
+                            Log.d(TAG, "REGISTER: ${authResultTask.result?.user}")
+                            saveUserToFirestore(fullName, isVet)
+                            if (isVet) {
+                                val vet = authResultTask.result?.user
+                                if (vet != null) {
+                                    Log.d(TAG, "VET: REGISTER USER ${vet}")
+                                    Log.d(TAG, "VET: REGISTER UID ${vet.uid}")
+                                    Log.d(TAG, "VET: REGISTER NAME ${vet.displayName}")
+                                    saveVetToFirestore(fullName, registeredVetClinic)
+                                }
+                                uploadFileToFirebaseStorage(uri = vetUri!!, vet!!.uid)
+                                errorLiveData.postValue("Sign up successful.")
+                                userLiveData.postValue(firebaseAuth.currentUser)
+                                _registrationStatus.postValue(authResultTask)
+
+                            } else {
+                                errorLiveData.postValue("Sign up successful.")
+                                userLiveData.postValue(firebaseAuth.currentUser)
+                                _registrationStatus.postValue(authResultTask)
+                            }
+
                         } else {
                             println(authResultTask.exception)
                             errorLiveData.postValue(authResultTask.exception?.message)
@@ -174,6 +199,84 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             }
         }
     }
+
+    private fun uploadFileToFirebaseStorage(uri: Uri, vetId: String) {
+        val storageRef = Firebase.storage.reference
+        val fileName = "${vetId}_registrationConfirmationFile"
+        val fileRef = storageRef.child("veterinarians/files/vetRegistrationConfirmation/$fileName")
+
+        Log.d(TAG, "uploadFileToFirebaseStorage URI: ${uri}")
+        Log.d(TAG, "uploadFileToFirebaseStorage vetId: ${vetId}")
+
+        val uploadTask = fileRef.putFile(uri)
+        uploadTask.addOnSuccessListener {
+            Log.d(TAG,"File uploaded successfully.")
+            // Handle success, if needed
+        }.addOnFailureListener {
+            Log.d(TAG,"Failed to upload file.")
+            // Handle failure, if needed
+        }
+    }
+    fun saveVetToFirestore(fullName: String? = null, registeredVetClinic: String? = null)  {
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+
+        if (user != null) {
+            val db = FirebaseFirestore.getInstance()
+
+            // SimpleDateFormat to format timestamps in a readable format
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+            val vetMap = hashMapOf(
+                "vetId" to user.uid,
+                "vetName" to user.displayName,
+                "vetClinicName" to registeredVetClinic,
+                "createdAt" to dateFormat.format(user.metadata?.creationTimestamp ?: 0),
+                "lastSignInAt" to dateFormat.format(user.metadata?.lastSignInTimestamp ?: 0),
+                "isActive" to false
+            )
+
+            // Additional fields can be added as needed
+            if (user.displayName != null) {
+                vetMap["vetName"] = user.displayName  // Ensures the name is included if available
+            } else if (fullName != null) {
+                vetMap["vetName"] = fullName
+            } else {
+                vetMap["vetName"] = null
+            }
+
+            // Document reference based on user ID
+            val vetDocRef = db.collection("veterinarians").document(user.uid)
+           // updateUserToVet(user.uid)
+            vetDocRef.set(vetMap)
+                .addOnSuccessListener {
+                    println("Vet data saved successfully")
+                }
+                .addOnFailureListener { e ->
+                    println("Error saving user data: $e")
+                }
+
+
+        } else {
+            println("No authenticated user found")
+        }
+
+    }
+    /*fun updateUserToVet(userId: String) {
+        val db = FirebaseFirestore.getInstance()
+        val userDocument = db.collection("users").document(userId)
+
+        // Set isVet to true
+        userDocument.update("isVet", true)
+            .addOnSuccessListener {
+                // Handle success (e.g., display a message to the user)
+                Log.d("Firestore", "Document successfully updated!")
+            }
+            .addOnFailureListener { e ->
+                // Handle failure (e.g., display an error message)
+                Log.w("Firestore", "Error updating document", e)
+            }
+    }*/
     fun logout(googleSignInClient: GoogleSignInClient) {
         repository.signOut()
         firebaseAuth.signOut()
@@ -223,7 +326,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             }
         }
 }
-    fun saveUserToFirestore(fullName: String? = null) {
+    fun saveUserToFirestore(fullName: String? = null, isVet: Boolean = false) {
         val auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
 
@@ -238,8 +341,11 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                 "email" to user.email,
                 "provider" to user.providerData.map { it.providerId }.joinToString(", "),
                 "createdAt" to dateFormat.format(user.metadata?.creationTimestamp ?: 0),
-                "lastSignInAt" to dateFormat.format(user.metadata?.lastSignInTimestamp ?: 0)
+                "lastSignInAt" to dateFormat.format(user.metadata?.lastSignInTimestamp ?: 0),
+                "isVet" to isVet,
+                "isActive" to true
             )
+
             // Additional fields can be added as needed
             if (user.displayName != null) {
                 userMap["name"] = user.displayName  // Ensures the name is included if available

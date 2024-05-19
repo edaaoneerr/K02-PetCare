@@ -41,7 +41,7 @@ class VeterinaryClinicAdapter(private val clinics: List<VeterinaryClinic>, priva
             nameTextView.text = clinic.name
             specialtyTextView.text = clinic.specialty
             ratingTextView.text = clinic.rating
-            distanceTextView.text = clinic.distance.toString() + " km"
+            distanceTextView.text = clinic.distance.toString()
 
             Glide.with(itemView.context)
                 .load(clinic.imageUrl)

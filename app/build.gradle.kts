@@ -57,6 +57,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation ("com.google.firebase:firebase-functions-ktx")
     implementation ("com.google.firebase:firebase-installations:17.2.0")
+    implementation("androidx.security:security-crypto:1.1.0-alpha03")
 
 
     // Google Sign-In
@@ -68,6 +69,11 @@ dependencies {
     implementation ("com.google.firebase:firebase-messaging:23.4.1")
     implementation("com.google.firebase:firebase-inappmessaging-display")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.5.6")
+    implementation ("com.prolificinteractive:material-calendarview:1.4.3")
 
 
     val nav_version = "2.7.7"
@@ -76,7 +82,7 @@ dependencies {
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
 
     implementation("io.getstream:avatarview-coil:1.0.7")
-    implementation("com.google.android.material:material:1.11.0-alpha01")
+    implementation("com.google.android.material:material:1.12.0")
     implementation("org.osmdroid:osmdroid-android:6.1.18")
     implementation("com.github.borjabravo10:ReadMoreTextView:2.0.1")
    // implementation ("com.caverock:androidsvg:1.4")

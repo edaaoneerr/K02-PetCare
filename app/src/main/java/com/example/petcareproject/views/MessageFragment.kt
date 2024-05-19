@@ -60,8 +60,8 @@ class MessageFragment : Fragment() {
         sendButton.setOnClickListener {
             sendMessage(message.text.toString())
         }
-        messages.observe(viewLifecycleOwner) {
-            updateMessageAdapter(it)
+        messages.observe(viewLifecycleOwner) {messages ->
+            updateMessageAdapter(messages)
         }
             getUserName { userName, userImage ->
                 if (userName != null && userImage != null) {
@@ -123,6 +123,7 @@ class MessageFragment : Fragment() {
                             senderId = document.getString("senderId") ?: "" // Fetch the image URL
                             messageText = document.getString("messageText") ?: ""
                             messageDate = document.getTimestamp("messageTimestamp") ?: Timestamp.now()
+                            isMessageReceived = senderId != FirebaseAuth.getInstance().currentUser?.uid
                             messages.add(
                                 Message(messageId, chatId, senderId, messageText, messageDate, isMessageReceived)
                             )
@@ -199,8 +200,7 @@ class MessageFragment : Fragment() {
             otherUserId = chat.chatParticipants.first { it != currentUserId }
             println("Other user in fragment" + otherUserId)
         }
-        val userDocRef =
-            FirebaseFirestore.getInstance().collection("users").document(otherUserId)
+        val userDocRef = FirebaseFirestore.getInstance().collection("users").document(otherUserId)
             userDocRef.get().addOnSuccessListener { document ->
             if (document.exists()) {
                 val userName = document.getString("name") ?: "No Name"

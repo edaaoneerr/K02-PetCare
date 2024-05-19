@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@drawable/image_shape"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/vetAppointmentDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="May 22, 2023 - 10:00 AM" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp">
+
+        <ImageView
+            android:id="@+id/vetAppointmentImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"
+            android:background="@drawable/image_shape"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="8dp">
+
+            <TextView
+                android:id="@+id/vetAppointmentName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dr. James Robinson"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/vetAppointmentSpecialty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Orthopedic Surgery" />
+
+            <TextView
+                android:id="@+id/vetAppointmentClinicName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Elite Ortho Clinic, USA" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/upcomingAppointmentButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/cancelAppointmentButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:backgroundTint="@android:color/darker_gray"
+            android:layout_marginEnd="10dp"/>
+
+        <Button
+            android:id="@+id/rescheduleAppointmentButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Reschedule"
+            android:backgroundTint="@color/pet" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/completedAppointmentButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/rebookAppointmentButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Re-Book"
+            android:backgroundTint="@color/green"
+            android:layout_marginEnd="10dp"/>
+
+        <Button
+            android:id="@+id/addReviewAppointmentButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Review"
+            android:backgroundTint="@color/pet" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/pendingAppointmentButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/pendingAppointmentButton"
+            android:layout_width="0dp"
+            android:background="@drawable/vet_clinic_shape"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Waiting Veterinarian Approval"
+            android:backgroundTint="@color/grey"
+            android:enabled="false"
+            android:layout_marginEnd="10dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.example.petcareproject.views.authview
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.petcareproject.R
 import com.example.petcareproject.databinding.FragmentRegisterBinding
 import com.example.petcareproject.factory.AuthViewModelFactory
+import com.example.petcareproject.model.User
 import com.example.petcareproject.repository.AuthRepository
 import com.example.petcareproject.viewmodels.AuthViewModel
 import com.facebook.CallbackManager
@@ -29,7 +31,7 @@ class RegisterFragment : Fragment() {
 
     private lateinit var callbackManager: CallbackManager
     private var isNewUser: Boolean = false
-
+    private val TAG = "VetAuth"
     private val viewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(AuthRepository())
     }
@@ -109,22 +111,39 @@ class RegisterFragment : Fragment() {
                     val emailText = binding.emailRegText.text.toString()
                     val passwordText = binding.passwordText.text.toString()
                     val fullNameText = binding.fullNameText.text.toString()
-                    if (binding.vetCheckbox.isChecked) {
-                        findNavController().navigate(R.id.action_registerFragment_to_vetRegisterFragment)
-                    } else {
-                        var hasError = false
-                        if (!viewModel.validateEmail(emailText)) {
-                            Toast.makeText(context, "Please enter a valid email address.", Toast.LENGTH_LONG).show()
-                            hasError = true
-                        }
-                        if (!viewModel.validatePassword(passwordText)) {
-                            Toast.makeText(context, "Password cannot be less than 6 characters long.", Toast.LENGTH_LONG).show()
-                            hasError = true
-                        }
-                        if (!hasError) {
-                            viewModel.register(email = binding.emailRegText.text.toString(), password = binding.passwordText.text.toString(), fullName = fullNameText)
-                        }
+                    var bundle = Bundle()
+
+                    var hasError = false
+                    if (!viewModel.validateEmail(emailText)) {
+                        Toast.makeText(context, "Please enter a valid email address.", Toast.LENGTH_LONG).show()
+                        hasError = true
                     }
+                    if (!viewModel.validatePassword(passwordText)) {
+                        Toast.makeText(context, "Password cannot be less than 6 characters long.", Toast.LENGTH_LONG).show()
+                        hasError = true
+                    }
+                    if (!hasError) {
+                        if (binding.vetCheckbox.isChecked) {
+                            val vetUser = User(
+                                userEmail = emailText,
+                                userPassword = passwordText,
+                                userName = fullNameText
+                            )
+                            val bundle = Bundle().apply {
+                                putParcelable("vetUser", vetUser)
+                            }
+                            Log.d(TAG, "Vet User comes from register: ${vetUser.userId}, ${vetUser.userEmail}, ${vetUser.userName}, ${vetUser.userPassword}, ${vetUser.isVet}")
+                            findNavController().navigate(R.id.action_registerFragment_to_vetRegisterFragment, bundle)
+                        } else {
+                            viewModel.register(email = binding.emailRegText.text.toString(),
+                                password = binding.passwordText.text.toString(),
+                                fullName = fullNameText,
+                                isVet = false)
+                        }
+
+                    }
+
+
                 } else {
                     viewModel.errorLiveData.postValue("Please read and agree to Terms and Policy before sign up.")
                 }

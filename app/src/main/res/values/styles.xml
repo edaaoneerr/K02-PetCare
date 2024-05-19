@@ -4,4 +4,18 @@
         <item name="colorControlNormal">@color/grey</item>  <!-- Color for unrated stars -->
         <item name="colorControlActivated">@color/yellow</item>  <!-- Color for rated stars -->
     </style>
+
+    <style name="CalendarDateTextAppearance">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+        <style name="CustomCalendarView" parent="Widget.MaterialComponents.MaterialCalendar">
+            <item name="android:dateTextAppearance">@style/CustomDateTextAppearance</item>
+        </style>
+
+        <style name="CustomDateTextAppearance" parent="TextAppearance.AppCompat.Medium">
+            <item name="android:background">@drawable/custom_calendar_selector</item>
+        </style>
+
 </resources>

@@ -68,7 +68,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomingCareMessage" />
 
-    <EditText
+    <!--<EditText
         android:id="@+id/nationalIdNumber"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -86,13 +86,13 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:textColorHint="@color/hint"
-        app:layout_constraintBottom_toTopOf="@+id/registeredVetChamber"
+        app:layout_constraintBottom_toTopOf="@+id/registeredVetClinic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fullNameText" />
+        app:layout_constraintTop_toBottomOf="@+id/fullNameText" />-->
 
     <EditText
-        android:id="@+id/registeredVetChamber"
+        android:id="@+id/registeredVetClinic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -101,7 +101,7 @@
         android:background="@drawable/rounded_corners"
         android:fontFamily="@font/poppins_medium"
         android:textColor="@color/pet"
-        android:hint="Kayıtlı olunan Hekim Odası"
+        android:hint="Çalıştığınız Klinik İsmi"
         android:paddingStart="24dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
@@ -110,7 +110,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nationalIdNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/fullNameText" />
 
     <TextView
         android:id="@+id/vetAttachIdText"
@@ -125,7 +125,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registeredVetChamber" />
+        app:layout_constraintTop_toBottomOf="@+id/registeredVetClinic" />
 
     <LinearLayout
         android:id="@+id/attachVetIdButton"
@@ -169,7 +169,7 @@
         app:tint="@color/dark_grey"
         android:visibility="invisible"
         android:backgroundTint="@android:color/transparent"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="2dp"
         app:layout_constraintStart_toEndOf="@id/vetAttachedFileName"
         app:layout_constraintTop_toBottomOf="@id/attachVetIdButton"
