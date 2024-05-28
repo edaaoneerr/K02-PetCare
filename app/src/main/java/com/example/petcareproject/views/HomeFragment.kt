@@ -11,9 +11,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petcareproject.R
 import com.example.petcareproject.adapters.CampaignCarouselPagerAdapter
-import com.example.petcareproject.adapters.PopularVetAdapter
 import com.example.petcareproject.adapters.PopularVeterinaryClinicAdapter
 import com.example.petcareproject.adapters.ServiceCategoryAdapter
+import com.example.petcareproject.adapters.vetadapters.PopularVetAdapter
 import com.example.petcareproject.databinding.FragmentHomeBinding
 import com.example.petcareproject.model.ServiceCategory
 import com.example.petcareproject.model.Vet
@@ -66,7 +66,7 @@ class HomeFragment : Fragment() {
                     true
                 }
                "Pets" -> {
-                   findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+                   findNavController().navigate(R.id.action_homeFragment_to_petFragment)
                     true
                 }
                 "Bookings" -> {

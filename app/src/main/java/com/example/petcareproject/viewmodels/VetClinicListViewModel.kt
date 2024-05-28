@@ -11,7 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.petcareproject.adapters.VeterinaryClinicAdapter
+import com.example.petcareproject.adapters.vetadapters.VeterinaryClinicAdapter
 import com.example.petcareproject.model.ServiceCategory
 import com.example.petcareproject.model.VeterinaryClinic
 import com.google.android.gms.common.api.ResolvableApiException

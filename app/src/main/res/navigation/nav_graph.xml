@@ -86,6 +86,9 @@
         <action
             android:id="@+id/action_homeFragment_to_bookingsFragment"
             app:destination="@id/bookingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_petFragment"
+            app:destination="@id/petFragment" />
     </fragment>
     <fragment
         android:id="@+id/vetRegisterFragment"
@@ -101,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/vetClinicListFragment"
-        android:name="com.example.petcareproject.views.VetClinicListFragment"
+        android:name="com.example.petcareproject.views.vetview.VetClinicListFragment"
         android:label="VetClinicListFragment" >
         <action
             android:id="@+id/action_vetClinicListFragment_to_vetDetailFragment"
@@ -109,7 +112,7 @@
     </fragment>
     <fragment
         android:id="@+id/vetDetailFragment"
-        android:name="com.example.petcareproject.views.VetDetailFragment"
+        android:name="com.example.petcareproject.views.vetview.VetDetailFragment"
         android:label="fragment_vet_detail"
         tools:layout="@layout/fragment_vet_detail" >
         <action
@@ -123,7 +126,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.petcareproject.views.ChatFragment"
+        android:name="com.example.petcareproject.views.messageview.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" >
         <action
@@ -132,13 +135,13 @@
     </fragment>
     <fragment
         android:id="@+id/messageFragment"
-        android:name="com.example.petcareproject.views.MessageFragment"
+        android:name="com.example.petcareproject.views.messageview.MessageFragment"
         android:label="fragment_message"
         tools:layout="@layout/fragment_message" >
     </fragment>
     <fragment
         android:id="@+id/vetListFragment"
-        android:name="com.example.petcareproject.views.VetListFragment"
+        android:name="com.example.petcareproject.views.vetview.VetListFragment"
         android:label="fragment_vet_list"
         tools:layout="@layout/fragment_vet_list" >
         <action
@@ -147,10 +150,55 @@
     </fragment>
     <fragment
         android:id="@+id/appointmentFragment"
-        android:name="com.example.petcareproject.views.AppointmentFragment"
+        android:name="com.example.petcareproject.views.appointmentview.AppointmentFragment"
         android:label="AppointmentFragment" />
     <fragment
         android:id="@+id/bookingsFragment"
-        android:name="com.example.petcareproject.views.BookingFragment"
+        android:name="com.example.petcareproject.views.appointmentview.BookingFragment"
         android:label="BookingsFragment" />
+    <fragment
+        android:id="@+id/petFragment"
+        android:name="com.example.petcareproject.views.petview.PetFragment"
+        android:label="PetFragment" >
+        <action
+            android:id="@+id/action_petFragment_to_petHealthFragment"
+            app:destination="@id/petHealthFragment" />
+        <action
+            android:id="@+id/action_petFragment_to_petNutritionFragment"
+            app:destination="@id/petNutritionFragment" />
+        <action
+            android:id="@+id/action_petFragment_to_petActivityFragment"
+            app:destination="@id/petActivityFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/petHealthFragment"
+        android:name="com.example.petcareproject.views.petview.PetHealthFragment"
+        android:label="fragment_pet_health"
+        tools:layout="@layout/fragment_pet_health" >
+        <action
+            android:id="@+id/action_petHealthFragment_to_petInsuranceFragment"
+            app:destination="@id/petInsuranceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/petNutritionFragment"
+        android:name="com.example.petcareproject.views.petview.PetNutritionFragment"
+        android:label="fragment_pet_nutrition"
+        tools:layout="@layout/fragment_pet_nutrition" />
+    <fragment
+        android:id="@+id/petActivityFragment"
+        android:name="com.example.petcareproject.views.petview.PetActivityFragment"
+        android:label="fragment_pet_activity"
+        tools:layout="@layout/fragment_pet_activity" />
+    <fragment
+        android:id="@+id/petInsuranceFragment"
+        android:name="com.example.petcareproject.views.petview.PetInsuranceFragment"
+        android:label="PetInsuranceFragment" >
+        <action
+            android:id="@+id/action_petInsuranceFragment_to_petInsurancePackagesFragment"
+            app:destination="@id/petInsurancePackagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/petInsurancePackagesFragment"
+        android:name="com.example.petcareproject.views.petview.PetInsurancePackagesFragment"
+        android:label="PetInsurancePackagesFragment" />
 </navigation>

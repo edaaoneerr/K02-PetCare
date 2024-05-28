@@ -65,7 +65,7 @@ class ProfileFragment : Fragment() {
          }
         fetchDocumentIds()
        // generateAndRegisterUsers(viewModel, viewLifecycleOwner, 1)
-        createAndUploadReviewsForVet()
+      //  createAndUploadReviewsForVet()
 
         // fetchClinicsAndGenerateVets()
     }

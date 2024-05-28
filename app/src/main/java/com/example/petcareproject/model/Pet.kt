@@ -9,6 +9,7 @@ data class Pet(
     val userId: String = "",
     var petName: String = "",
     var petType: String = "",
+    var petBreed: String = "",
     var isMale: Boolean,
     var petWeight: String = "",
     var petBirthday: Timestamp?,
@@ -16,6 +17,7 @@ data class Pet(
     ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -29,6 +31,7 @@ data class Pet(
         parcel.writeString(userId)
         parcel.writeString(petName)
         parcel.writeString(petType)
+        parcel.writeString(petBreed)
         parcel.writeBoolean(isMale)
         parcel.writeString(petWeight)
         parcel.writeParcelable(petBirthday, flags)
